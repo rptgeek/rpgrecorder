@@ -29,6 +29,17 @@ This roadmap outlines the phased development for the TTRPG Session Recorder and 
 4.  User can view a session transcript with clearly differentiated speakers and play back the original audio synchronized with the highlighted text.
 5.  User can add, edit, and save basic manual notes associated with a specific session.
 
+**Plans:** 9 plans
+- [ ] 1-01-PLAN.md — Database & Prisma Setup
+- [ ] 1-02-PLAN.md — Auth.js Integration
+- [ ] 1-03-PLAN.md — Session Management API
+- [ ] 1-04-PLAN.md — AWS S3 Presigned URL API
+- [ ] 1-05-PLAN.md — Client-side Audio Recording & S3 Upload UI
+- [ ] 1-06-PLAN.md — AWS Transcribe Integration & Data Storage
+- [ ] 1-07-PLAN.md — Session View UI & Basic Transcript Display
+- [ ] 1-08-PLAN.md — Synchronized Transcript Playback
+- [ ] 1-09-PLAN.md — Basic Manual Notes Feature
+
 ### Phase 2: Core Value - AI Summarization & Search
 
 **Goal:** Users can quickly grasp the essence of their sessions through AI-generated summaries and efficiently find specific content using keyword search.
@@ -63,6 +74,6 @@ This roadmap outlines the phased development for the TTRPG Session Recorder and 
 
 | Phase | Status |
 |-------|--------|
-| 1     | Pending |
+| 1     | Planned |
 | 2     | Pending |
 | 3     | Pending |

@@ -2,8 +2,8 @@
 phase: 1-foundation---recording-&-transcription
 plan: 09
 type: execute
-wave: 3
-depends_on: ["1-03", "1-07"] # Needs Session API for update, and Session View UI for integration
+wave: 4
+depends_on: ["1-01", "1-03", "1-12", "1-07"]
 files_modified:
   - prisma/schema.prisma
   - prisma/migrations/
@@ -61,6 +61,7 @@ Output: An editable notes section on the session page, with data persistence.
 @.planning/research/ARCHITECTURE.md
 @.planning/phases/1-foundation---recording-&-transcription/1-03-SUMMARY.md
 @.planning/phases/1-foundation---recording-&-transcription/1-07-SUMMARY.md
+@.planning/phases/1-foundation---recording-&-transcription/1-12-SUMMARY.md
 </context>
 
 <tasks>
@@ -74,7 +75,7 @@ Output: An editable notes section on the session page, with data persistence.
   <action>
     Add an optional `notes: String?` field to the `Session` model in `prisma/schema.prisma`.
     Generate and apply a new Prisma migration to update the database schema.
-    Update `src/validation/session.ts` to include `notes` as an optional string field in `updateSessionSchema`.
+    Update `src/validation/session.ts` (Plan 03) to include `notes` as an optional string field in `updateSessionSchema`.
   </action>
   <verify>
     `prisma/schema.prisma` contains `notes: String?` in `Session` model.
@@ -93,9 +94,9 @@ Output: An editable notes section on the session page, with data persistence.
     src/app/api/sessions/[id]/route.ts
   </files>
   <action>
-    Modify `updateSession` function in `src/lib/actions/session.ts` to accept and save the `notes` field when provided.
+    Modify `updateSession` function in `src/lib/actions/session.ts` (Plan 03) to accept and save the `notes` field when provided.
     Ensure `getSessionById` also retrieves the `notes` field.
-    Update the `PUT`/`PATCH` API route in `src/app/api/sessions/[id]/route.ts` to handle incoming `notes` data from the request body and pass it to `updateSession`.
+    Update the `PUT`/`PATCH` API route in `src/app/api/sessions/[id]/route.ts` (Plan 12) to handle incoming `notes` data from the request body and pass it to `updateSession`.
   </action>
   <verify>
     API endpoint for updating a session (`PUT`/`PATCH` `/api/sessions/[id]`) can successfully receive and save `notes` data.
@@ -117,7 +118,7 @@ Output: An editable notes section on the session page, with data persistence.
     - Accepts the current session's notes as a prop.
     - Provides a textarea or a simple rich text editor for users to input/edit notes.
     - Includes a "Save" button.
-    - On save, it should call an action (e.g., passed as a prop, or directly call `updateSession` from client component) to persist the changes via the Session API.
+    - On save, it should call an action (e.g., passed as a prop, or directly call `updateSession` from client component) to persist the changes via the Session API (Plan 12).
     Integrate this `NotesEditor` component into the `src/app/sessions/[id]/page.tsx` (Plan 07).
   </action>
   <verify>

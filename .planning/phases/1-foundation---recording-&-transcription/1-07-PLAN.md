@@ -2,8 +2,8 @@
 phase: 1-foundation---recording-&-transcription
 plan: 07
 type: execute
-wave: 3
-depends_on: ["1-03", "1-06"] # Needs Session API for details, and transcription data from 1-06
+wave: 4
+depends_on: ["1-12", "1-06", "1-13"]
 files_modified:
   - src/app/sessions/[id]/page.tsx
   - src/components/TranscriptDisplay.tsx
@@ -58,8 +58,9 @@ Output: A Next.js page that fetches and displays session details, the full trans
 @.planning/STATE.md
 @.planning/research/STACK.md
 @.planning/research/ARCHITECTURE.md
-@.planning/phases/1-foundation---recording-&-transcription/1-03-SUMMARY.md
+@.planning/phases/1-foundation---recording-&-transcription/1-12-SUMMARY.md
 @.planning/phases/1-foundation---recording-&-transcription/1-06-SUMMARY.md
+@.planning/phases/1-foundation---recording-&-transcription/1-13-SUMMARY.md
 </context>
 
 <tasks>
@@ -72,10 +73,10 @@ Output: A Next.js page that fetches and displays session details, the full trans
   <action>
     Create a new dynamic Next.js page at `src/app/sessions/[id]/page.tsx`.
     This page should:
-    - Fetch the session details (name, description, `audioStorageKey`, `transcriptJson`) using `getSessionById` from `src/lib/actions/session.ts` (Plan 03).
+    - Fetch the session details (name, description, `audioStorageKey`, `transcriptJson`) using `getSessionById` from `src/lib/actions/session.ts` (Plan 12).
     - Handle cases where the session is not found or the user is not authorized.
     - Display the session's name and description.
-    - Implement a method to generate a presigned download URL for the `audioStorageKey` (can reuse/adapt logic from Plan 04 or create a new endpoint).
+    - Implement a method to generate a presigned download URL for the `audioStorageKey` (can reuse/adapt logic from Plan 11 or create a new endpoint).
     - Embed an HTML5 `<audio>` element with the generated presigned URL as its `src`.
   </action>
   <verify>
@@ -96,7 +97,7 @@ Output: A Next.js page that fetches and displays session details, the full trans
   </files>
   <action>
     Create `src/components/TranscriptDisplay.tsx` component.
-    This component should accept the `transcriptJson` (from Plan 06) as a prop.
+    This component should accept the `transcriptJson` (from Plan 06's schema update) as a prop.
     Parse the `transcriptJson` to extract the full text and speaker segments.
     Render the transcript text, clearly differentiating between speakers (e.g., "Speaker 1: ...", "Speaker 2: ...").
     Integrate this component into `src/app/sessions/[id]/page.tsx` to display the session's transcript.
@@ -113,7 +114,7 @@ Output: A Next.js page that fetches and displays session details, the full trans
 </tasks>
 
 <verification>
-1.  Ensure you have a session with both uploaded audio (Plan 05) and a completed transcription (Plan 06).
+1.  Ensure you have a session with both uploaded audio (Plan 13) and a completed transcription (Plan 14).
 2.  Log in to the application and navigate to `/sessions/{your_session_id}`.
 3.  Verify that the session's name, description, and an audio player are visible.
 4.  Play the audio and confirm it works.

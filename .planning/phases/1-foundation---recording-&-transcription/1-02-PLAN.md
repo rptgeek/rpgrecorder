@@ -7,9 +7,8 @@ depends_on: ["1-01"]
 files_modified:
   - src/app/api/auth/[...nextauth]/route.ts
   - src/auth.ts
-  - src/components/auth-forms.tsx # Example UI component
-  - src/middleware.ts
   - .env
+  - package.json
 autonomous: true
 user_setup:
   - service: Auth.js
@@ -21,10 +20,8 @@ user_setup:
 
 must_haves:
   truths:
-    - "Users can successfully create an account."
-    - "Users can log in using their credentials."
-    - "Users can securely log out."
-    - "Unauthenticated users are redirected from protected routes."
+    - "Auth.js is correctly configured with Prisma adapter."
+    - "Auth.js API routes are functional."
   artifacts:
     - path: "src/app/api/auth/[...nextauth]/route.ts"
       provides: "Auth.js API routes"
@@ -32,9 +29,6 @@ must_haves:
     - path: "src/auth.ts"
       provides: "Auth.js configuration (providers, adapter, callbacks)"
       min_lines: 30
-    - path: "src/components/auth-forms.tsx"
-      provides: "UI for sign-in/sign-up/sign-out"
-      min_lines: 50
   key_links:
     - from: "src/auth.ts"
       to: "prisma.user"
@@ -44,17 +38,13 @@ must_haves:
       to: "src/auth.ts"
       via: "NextAuth(authConfig)"
       pattern: "NextAuth(authConfig)"
-    - from: "src/components/auth-forms.tsx"
-      to: "/api/auth/signin"
-      via: "signIn('credentials', ...)"
-      pattern: "signIn\('credentials'"
 ---
 
 <objective>
-Implement secure user authentication using Auth.js (NextAuth.js) with the Prisma adapter.
+Implement core Auth.js (NextAuth.js) functionality using the Prisma adapter for backend authentication.
 
-Purpose: Enable users to create accounts, log in, and log out, fulfilling AUTH-01. This is crucial for protecting user data and session-related operations.
-Output: Working authentication endpoints, basic protected routes, and UI components for user interaction.
+Purpose: Set up the essential server-side components for user authentication, providing secure endpoints that other plans will leverage.
+Output: Configured Auth.js, working authentication API routes, and secure integration with Prisma.
 </objective>
 
 <execution_context>
@@ -74,85 +64,59 @@ Output: Working authentication endpoints, basic protected routes, and UI compone
 <tasks>
 
 <task type="auto">
-  <name>Task 1: Configure Auth.js with Credentials Provider and Prisma Adapter</name>
+  <name>Task 1: Install Auth.js dependencies and configure `src/auth.ts`</name>
   <files>
     package.json
     src/auth.ts
     .env
   </files>
   <action>
-    Install Auth.js and the Prisma adapter.
-    Create `src/auth.ts` to configure Auth.js.
-    Define a `CredentialsProvider` for email/password login.
+    Install `next-auth`, `@auth/prisma-adapter`, and `bcrypt` packages.
+    Create `src/auth.ts` to configure Auth.js, defining a `CredentialsProvider` for email/password.
     Integrate `PrismaAdapter` to manage user sessions and data in the database using the `User` model from Plan 01.
-    Add `NEXTAUTH_SECRET` to `.env`.
-    Ensure password hashing (e.g., bcrypt) is used for storing and verifying user passwords.
+    Add `NEXTAUTH_SECRET` to `.env` with a strong, random value.
+    Ensure `bcrypt` is used for hashing passwords before storing them and for verification.
   </action>
   <verify>
-    `npm list next-auth @auth/prisma-adapter bcrypt` shows installed packages.
-    `src/auth.ts` exports a valid `authConfig` with CredentialsProvider and PrismaAdapter.
-    `.env` contains `NEXTAUTH_SECRET`.
+    `npm list next-auth @auth/prisma-adapter bcrypt` shows packages installed.
+    `src/auth.ts` exports `authConfig` with `CredentialsProvider` and `PrismaAdapter`.
+    `.env` contains `NEXTAUTH_SECRET` with a value.
   </verify>
   <done>
-    Auth.js is configured with credentials provider and Prisma for user management.
+    Auth.js core setup is complete with Prisma integration and secure password handling.
   </done>
 </task>
 
 <task type="auto">
-  <name>Task 2: Create Auth.js API Routes and Middleware</name>
+  <name>Task 2: Create Auth.js API Routes</name>
   <files>
     src/app/api/auth/[...nextauth]/route.ts
-    src/middleware.ts
   </files>
   <action>
-    Create the dynamic route handler `src/app/api/auth/[...nextauth]/route.ts` that exports `GET` and `POST` methods using `authConfig`.
-    Implement `src/middleware.ts` to protect application routes, redirecting unauthenticated users to a login page. Exclude `_next/*`, `api/auth/*` from middleware protection.
+    Create the dynamic route handler `src/app/api/auth/[...nextauth]/route.ts` that exports `GET` and `POST` methods using the `authConfig` from `src/auth.ts`.
   </action>
   <verify>
-    `src/app/api/auth/[...nextauth]/route.ts` is created and correctly imports `authConfig`.
-    `src/middleware.ts` is present and redirects unauthenticated users for protected routes.
+    `src/app/api/auth/[...nextauth]/route.ts` exists and correctly imports and uses `authConfig`.
+    `curl -X GET /api/auth/session` returns a session object (if logged in) or null (if not).
   </verify>
   <done>
-    Auth.js API endpoints are functional, and middleware protects application routes.
-  </done>
-</task>
-
-<task type="auto">
-  <name>Task 3: Implement Basic Auth UI (Sign-in, Sign-up, Sign-out)</name>
-  <files>
-    src/app/page.tsx # Example homepage for login/logout buttons
-    src/app/protected/page.tsx # Example protected page
-    src/components/auth-forms.tsx # Contains login/signup/logout components
-  </files>
-  <action>
-    Create basic React components for user sign-in and sign-up forms that interact with the Auth.js API routes.
-    Add a sign-out button.
-    Create a simple `src/app/protected/page.tsx` that can only be accessed by authenticated users.
-    Update `src/app/page.tsx` to include links to login/signup or a logout button if authenticated.
-  </action>
-  <verify>
-    The application successfully handles new user registration, logs in existing users, and allows users to log out.
-    Navigating to `/protected` as an unauthenticated user redirects to the login page.
-    Navigating to `/protected` as an authenticated user shows the protected content.
-  </verify>
-  <done>
-    Full authentication flow (signup, login, logout, protected routes) is functional end-to-end.
+    Auth.js API endpoints for authentication are functional.
   </done>
 </task>
 
 </tasks>
 
 <verification>
-1.  Attempt to register a new user via the UI. Verify user is created in the database.
-2.  Log in with the newly created user. Verify successful login and ability to access `/protected`.
-3.  Log out. Verify redirection and inability to access `/protected`.
-4.  Attempt to access `/protected` without logging in. Verify redirection to login.
+1.  Ensure `NEXTAUTH_SECRET` is set in `.env`.
+2.  Test `GET /api/auth/session` to confirm no user is logged in.
+3.  Simulate a login POST request to `/api/auth/callback/credentials` (or through a test UI later) to verify the CredentialsProvider and PrismaAdapter are working.
+4.  After simulated login, `GET /api/auth/session` should return user data.
 </verification>
 
 <success_criteria>
-- User authentication (sign-up, sign-in, sign-out) is fully functional.
-- Application routes can be protected, redirecting unauthenticated users.
-- User data is securely stored and managed by Auth.js and Prisma.
+- Auth.js is installed and configured with Prisma adapter.
+- Server-side authentication API routes are functional for login, logout, and session management.
+- User passwords are securely handled with hashing.
 </success_criteria>
 
 <output>

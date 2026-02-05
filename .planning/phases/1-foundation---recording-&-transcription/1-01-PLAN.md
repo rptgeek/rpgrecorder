@@ -8,6 +8,7 @@ files_modified:
   - prisma/schema.prisma
   - prisma/migrations/
   - .env
+  - package.json
 autonomous: true
 user_setup:
   - service: PostgreSQL

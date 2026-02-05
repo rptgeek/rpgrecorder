@@ -2,8 +2,8 @@
 phase: 1-foundation---recording-&-transcription
 plan: 08
 type: execute
-wave: 4
-depends_on: ["1-07"] # Needs the basic UI and transcript data from 1-07
+wave: 5
+depends_on: ["1-07", "1-14"]
 files_modified:
   - src/components/TranscriptDisplay.tsx
   - src/app/sessions/[id]/page.tsx
@@ -48,6 +48,7 @@ Output: An interactive transcript display where text highlights in sync with aud
 @.planning/research/STACK.md
 @.planning/research/ARCHITECTURE.md
 @.planning/phases/1-foundation---recording-&-transcription/1-07-SUMMARY.md
+@.planning/phases/1-foundation---recording-&-transcription/1-14-SUMMARY.md
 </context>
 
 <tasks>
@@ -78,7 +79,7 @@ Output: An interactive transcript display where text highlights in sync with aud
   </files>
   <action>
     Modify `src/components/TranscriptDisplay.tsx` to:
-    - Parse the `transcriptJson` to access word-level timestamps (start and end times for each word).
+    - Parse the `transcriptJson` (from Plan 14) to access word-level timestamps (start and end times for each word).
     - Based on the current audio `currentTime` (from Task 1), identify the word or phrase currently being spoken.
     - Apply a visual highlight (e.g., CSS class, inline style) to the currently spoken text segment.
     - Optimize rendering to avoid performance issues with frequent updates.

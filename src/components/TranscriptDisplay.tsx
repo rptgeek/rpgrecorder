@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 
 interface TranscriptDisplayProps {
   transcriptJson: any; // AWS Transcribe output JSON structure can vary, using 'any' for now
-  audioRef: React.RefObject<HTMLAudioElement>;
+  audioRef: React.RefObject<HTMLAudioElement | null>;
 }
 
 const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({ transcriptJson, audioRef }) => {

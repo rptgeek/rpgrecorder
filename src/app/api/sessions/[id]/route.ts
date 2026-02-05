@@ -6,9 +6,9 @@ import { updateSessionSchema } from "@/validation/session";
 import { z } from "zod";
 
 interface SessionApiRouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function GET(req: NextRequest, context: SessionApiRouteContext) {
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest, context: SessionApiRouteContext) {
   }
 
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const sessionData = await getSessionById(id); // getSessionById already includes userId check
 
     return NextResponse.json(sessionData, { status: 200 });
@@ -45,7 +45,7 @@ export async function PUT(req: NextRequest, context: SessionApiRouteContext) {
   }
 
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const body = await req.json();
     const validatedData = updateSessionSchema.parse(body);
 
@@ -54,7 +54,7 @@ export async function PUT(req: NextRequest, context: SessionApiRouteContext) {
     return NextResponse.json(updatedSession, { status: 200 });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ message: "Invalid request payload", errors: error.errors }, { status: 400 });
+      return NextResponse.json({ message: "Invalid request payload", errors: error.issues }, { status: 400 });
     }
     if (error instanceof Error) {
       if (error.message.includes("not found")) {
@@ -81,7 +81,7 @@ export async function DELETE(req: NextRequest, context: SessionApiRouteContext) 
   }
 
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     await deleteSession(id); // deleteSession already includes userId check
 
     return NextResponse.json({ message: "Session deleted successfully" }, { status: 200 });

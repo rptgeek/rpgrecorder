@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url, fields, key: s3Key });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ message: "Invalid request payload", errors: error.errors }, { status: 400 });
+      return NextResponse.json({ message: "Invalid request payload", errors: error.issues }, { status: 400 });
     }
     console.error("Error generating presigned URL:", error);
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });

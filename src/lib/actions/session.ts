@@ -1,11 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+"use server";
+
+import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/auth"; // Using alias for src/auth.ts
 import { createSessionSchema, updateSessionSchema } from "@/validation/session"; // Using alias for src/validation/session.ts
 import { z } from "zod";
 import { startTranscriptionJob } from "@/lib/aws/transcribe"; // Import startTranscriptionJob
-
-const prisma = new PrismaClient();
 
 // Helper to get current user's ID
 async function getCurrentUserId() {
@@ -25,11 +25,11 @@ export async function createSession(
   const session = await prisma.session.create({
     data: {
       name: validatedData.name,
-      description: validatedData.description,
-      audioStorageKey: validatedData.audioStorageKey,
-      transcriptionJobId: validatedData.transcriptionJobId,
-      transcriptJson: validatedData.transcriptJson,
-      notes: validatedData.notes,
+      description: validatedData.description ?? null,
+      audioStorageKey: validatedData.audioStorageKey ?? null,
+      transcriptionJobId: validatedData.transcriptionJobId ?? null,
+      transcriptJson: validatedData.transcriptJson ?? null,
+      notes: validatedData.notes ?? null,
       userId: userId,
     },
   });
@@ -83,11 +83,11 @@ export async function updateSession(
     where: { id: id },
     data: {
       name: validatedData.name,
-      description: validatedData.description,
-      audioStorageKey: validatedData.audioStorageKey,
-      transcriptionJobId: validatedData.transcriptionJobId,
-      transcriptJson: validatedData.transcriptJson,
-      notes: validatedData.notes,
+      description: validatedData.description ?? null,
+      audioStorageKey: validatedData.audioStorageKey ?? null,
+      transcriptionJobId: validatedData.transcriptionJobId ?? null,
+      transcriptJson: validatedData.transcriptJson ?? null,
+      notes: validatedData.notes ?? null,
     },
   });
 

@@ -27,8 +27,8 @@ export async function startTranscriptionJob(
 
   const params = {
     TranscriptionJobName: jobName,
-    LanguageCode: "en-US", // Hardcoded for now, could be dynamic
-    MediaFormat: "webm", // Hardcoded for now, could be dynamic
+    LanguageCode: "en-US" as any, // Hardcoded for now, could be dynamic
+    MediaFormat: "webm" as any, // Hardcoded for now, could be dynamic
     Media: {
       MediaFileUri: mediaUri,
     },

@@ -4,18 +4,18 @@ import { getSessionById, updateSession } from "@/lib/actions/session"; // Import
 import { generatePresignedGetObject } from "@/lib/aws/s3";
 import { notFound } from "next/navigation";
 import TranscriptDisplay from "@/components/TranscriptDisplay";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, use } from "react";
 import NotesEditor from "@/components/NotesEditor";
 import AudioRecorder from "@/components/AudioRecorder"; // Import AudioRecorder
 
 interface SessionDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function SessionDetailPage({ params }: SessionDetailPageProps) {
-  const { id } = params;
+  const { id } = use(params);
   const [sessionData, setSessionData] = useState<any>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);

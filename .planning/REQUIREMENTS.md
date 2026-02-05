@@ -71,14 +71,14 @@ This section will be filled in during the roadmap creation to link requirements 
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01     | Phase 1 | Pending |
-| SESS-01     | Phase 1 | Pending |
-| AUDIO-01    | Phase 1 | Pending |
-| AUDIO-02    | Phase 1 | Pending |
-| TRANS-01    | Phase 1 | Pending |
-| TRANS-02    | Phase 1 | Pending |
-| REVIEW-01   | Phase 1 | Pending |
-| NOTES-01    | Phase 1 | Pending |
+| AUTH-01     | Phase 1 | Completed |
+| SESS-01     | Phase 1 | Completed |
+| AUDIO-01    | Phase 1 | Completed |
+| AUDIO-02    | Phase 1 | Completed |
+| TRANS-01    | Phase 1 | Completed |
+| TRANS-02    | Phase 1 | Completed |
+| REVIEW-01   | Phase 1 | Completed |
+| NOTES-01    | Phase 1 | Completed |
 | AI-01       | Phase 2 | Pending |
 | SEARCH-01   | Phase 2 | Pending |
 | DASH-01     | Phase 2 | Pending |

@@ -74,6 +74,6 @@ This roadmap outlines the phased development for the TTRPG Session Recorder and 
 
 | Phase | Status |
 |-------|--------|
-| 1     | Planned |
+| 1     | Complete |
 | 2     | Pending |
 | 3     | Pending |

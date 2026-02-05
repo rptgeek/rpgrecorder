@@ -68,3 +68,19 @@ The following features are explicitly not planned for this project:
 ## Traceability
 
 This section will be filled in during the roadmap creation to link requirements to specific phases and tasks.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| AUTH-01     | Phase 1 | Pending |
+| SESS-01     | Phase 1 | Pending |
+| AUDIO-01    | Phase 1 | Pending |
+| AUDIO-02    | Phase 1 | Pending |
+| TRANS-01    | Phase 1 | Pending |
+| TRANS-02    | Phase 1 | Pending |
+| REVIEW-01   | Phase 1 | Pending |
+| NOTES-01    | Phase 1 | Pending |
+| AI-01       | Phase 2 | Pending |
+| SEARCH-01   | Phase 2 | Pending |
+| DASH-01     | Phase 2 | Pending |
+| RECAP-01    | Phase 3 | Pending |
+| METRICS-01  | Phase 3 | Pending |

@@ -1,17 +1,31 @@
 import { CognitoJwtVerifier } from "aws-jwt-verify";
 import { CognitoIdentityProviderClient, InitiateAuthCommand } from "@aws-sdk/client-cognito-identity-provider";
 
-// JWT Verifier (singleton, caches JWKS)
-const verifier = CognitoJwtVerifier.create({
-  userPoolId: process.env.COGNITO_USER_POOL_ID!,
-  clientId: process.env.COGNITO_CLIENT_ID!,
-  tokenUse: "access",
-});
+// JWT Verifier (singleton, caches JWKS) - lazy loaded to avoid build-time errors
+let verifier: ReturnType<typeof CognitoJwtVerifier.create> | null = null;
 
-// Cognito client for token refresh
-const cognitoClient = new CognitoIdentityProviderClient({
-  region: process.env.AWS_REGION || "us-east-1",
-});
+function getVerifier() {
+  if (!verifier) {
+    verifier = CognitoJwtVerifier.create({
+      userPoolId: process.env.COGNITO_USER_POOL_ID!,
+      clientId: process.env.COGNITO_CLIENT_ID!,
+      tokenUse: "access",
+    });
+  }
+  return verifier;
+}
+
+// Cognito client for token refresh - lazy loaded to avoid build-time errors
+let cognitoClient: CognitoIdentityProviderClient | null = null;
+
+function getCognitoClient() {
+  if (!cognitoClient) {
+    cognitoClient = new CognitoIdentityProviderClient({
+      region: process.env.AWS_REGION || "us-east-1",
+    });
+  }
+  return cognitoClient;
+}
 
 export interface VerifyResult {
   valid: boolean;
@@ -31,7 +45,7 @@ export interface VerifyResult {
  */
 export async function verifyAccessToken(token: string): Promise<VerifyResult> {
   try {
-    const payload = await verifier.verify(token);
+    const payload = await getVerifier().verify(token);
     return {
       valid: true,
       payload: {
@@ -72,7 +86,7 @@ export async function refreshAccessToken(refreshToken: string): Promise<RefreshR
       },
     });
 
-    const response = await cognitoClient.send(command);
+    const response = await getCognitoClient().send(command);
 
     if (!response.AuthenticationResult) {
       return { success: false, error: "No authentication result" };

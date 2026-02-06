@@ -26,7 +26,7 @@ export const authConfig: NextAuthOptions = {
           accessToken: account.access_token,
           refreshToken: account.refresh_token,
           idToken: account.id_token,
-          expiresAt: Math.floor(Date.now() / 1000) + (account.expires_in || 3600),
+          expiresAt: account.expires_at || Math.floor(Date.now() / 1000) + 3600,
           // Use Cognito 'sub' as user ID (stable partition key for DynamoDB)
           id: account.providerAccountId, // This is the Cognito 'sub'
         };

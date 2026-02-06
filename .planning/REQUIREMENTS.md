@@ -34,10 +34,10 @@ These are the essential features for the initial release of the project.
 - [ ] **DASH-01**: System provides a dashboard with an overview of sessions within a campaign.
 
 ### Player Recaps
-- [ ] **RECAP-01**: System can generate player-specific recaps of a session.
+- [x] **RECAP-01**: System can generate player-specific recaps of a session.
 
 ### Session Metrics
-- [ ] **METRICS-01**: System can provide basic session metrics (e.g., session length).
+- [x] **METRICS-01**: System can provide basic session metrics (e.g., session length).
 
 ## v2 Requirements (Deferred Features)
 
@@ -95,6 +95,6 @@ This section will be filled in during the roadmap creation to link requirements 
 
 | DASH-01     | Phase 2 | Completed |
 
-| RECAP-01    | Phase 3 | Pending |
+| RECAP-01    | Phase 3 | Completed |
 
-| METRICS-01  | Phase 3 | Pending |
+| METRICS-01  | Phase 3 | Completed |

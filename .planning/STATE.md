@@ -4,13 +4,13 @@
 
 **Core Value:** Provide GMs with an organized, insightful, and searchable review of their TTRPG sessions, facilitating plot development, world-building, and NPC management, while offering tailored, player-facing recaps.
 
-**Current Focus:** Executing Phase 1: Foundation - Recording & Transcription.
+**Current Focus:** All v1.0 phases completed.
 
 ## Current Position
 
-**Phase:** 2: Core Value - AI Summarization & Search
+**Phase:** 3: Player Engagement & Insights
 **Plan:** N/A
-**Status:** Phase 2 Completed
+**Status:** Phase 3 Completed
 **Progress Bar:** ▰▰▰▰▰▰▰▰▰▰▰▰▰▰ 100%
 
 ## Performance Metrics
@@ -24,14 +24,14 @@
 - All 13 v1 requirements mapped to exactly one phase.
 - Use Claude 3.5 Sonnet for summarization and PostgreSQL FTS for search (Phase 2).
 - Use Inngest for background job processing (Phase 2).
+- Player recaps use AI reasoning to distinguish player-facing vs GM-only information (Phase 3).
+- Session metrics displayed on session detail page for immediate context (Phase 3).
+- Export options: copy-to-clipboard, PDF generation, shareable public links (Phase 3).
 
 ### Todos
-- Plan 02-01: Setup Campaigns, AI fields, and Inngest (completed).
-- Plan 02-02: Implement Postgres FTS and Search API (completed).
-- Plan 02-03: AI Summarization with Claude 3.5 (completed).
-- Plan 02-04: Campaign Management and Dashboard (completed).
-- Plan 02-05: Integrated Search and AI UI (completed).
 - Execute Phase 1: Foundation - Recording & Transcription (completed).
+- Execute Phase 2: Core Value - AI Summarization & Search (completed).
+- Execute Phase 3: Player Engagement & Insights (completed).
 
 ### Blockers
 - None.

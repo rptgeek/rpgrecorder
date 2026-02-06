@@ -83,9 +83,9 @@ This roadmap outlines the phased development for the TTRPG Session Recorder and 
 2.  User can view basic analytical metrics for each session, such as total duration, word count, and number of unique speakers.
 
 **Plans:** 3 plans
-- [ ] 03-01-PLAN.md — Metrics & Speaker Foundation
-- [ ] 03-02-PLAN.md — AI Player Recaps
-- [ ] 03-03-PLAN.md — Sharing & Export
+- [x] 03-01-PLAN.md — Metrics & Speaker Foundation
+- [x] 03-02-PLAN.md — AI Player Recaps
+- [x] 03-03-PLAN.md — Sharing & Export
 
 ## Progress
 
@@ -93,4 +93,4 @@ This roadmap outlines the phased development for the TTRPG Session Recorder and 
 |-------|--------|
 | 1     | Complete |
 | 2     | Complete |
-| 3     | Pending |
+| 3     | Complete |

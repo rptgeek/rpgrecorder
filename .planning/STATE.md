@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 4 of 8 (Authentication Migration)
-Plan: 2 of TBD in current phase
+Plan: 3 of TBD in current phase
 Status: In progress
-Last activity: 2026-02-06 — Completed 04-02-PLAN.md (User Migration Lambda Implementation)
+Last activity: 2026-02-06 — Completed 04-03-PLAN.md (Auth.js Cognito Provider Integration)
 
-Progress: [███░░░░░░░] 38% (3/8 phases complete, v1.0 shipped, Phase 4: 2 plans complete)
+Progress: [███░░░░░░░] 38% (3/8 phases complete, v1.0 shipped, Phase 4: 3 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 24 (22 in v1.0, 2 in v1.1)
-- Average duration: 6.5 minutes (v1.1 Phase 4)
-- Total execution time: ~1 day (v1.0), ~13 minutes (v1.1 to date)
+- Total plans completed: 25 (22 in v1.0, 3 in v1.1)
+- Average duration: 8.3 minutes (v1.1 Phase 4)
+- Total execution time: ~1 day (v1.0), ~25 minutes (v1.1 to date)
 
 **By Phase:**
 
@@ -30,13 +30,13 @@ Progress: [███░░░░░░░] 38% (3/8 phases complete, v1.0 shippe
 | 1. Foundation & Authentication | Complete | v1.0 | - |
 | 2. Transcription & AI Integration | Complete | v1.0 | - |
 | 3. Player Engagement & Insights | Complete | v1.0 | - |
-| 4. Authentication Migration | 2 | 13 min | 6.5 min |
+| 4. Authentication Migration | 3 | 25 min | 8.3 min |
 
 **Recent Trend:**
-- v1.1 Phase 4 started: 2 plans complete (13 minutes)
-- Velocity improving: 8 min → 5 min per plan
+- v1.1 Phase 4 started: 3 plans complete (25 minutes)
+- Velocity trend: 8 min → 5 min → 12 min per plan
 
-*Updated after 04-02 completion*
+*Updated after 04-03 completion*
 
 ## Accumulated Context
 
@@ -57,6 +57,9 @@ Recent decisions affecting current work:
 - 04-02: Set Lambda max connections to 1 (efficient for single-threaded Lambda instances)
 - 04-02: Set Lambda timeout to 10 seconds (bcrypt is CPU-intensive)
 - 04-02: Suppress welcome emails for migrated users (better UX for existing users)
+- 04-03: Lazy-load JWT verifier and Cognito client (prevents build errors when env vars not set)
+- 04-03: Use 60-second token expiry buffer (prevents race conditions with in-flight requests)
+- 04-03: Use account.expires_at for token expiration (avoids TypeScript type errors)
 
 ### Pending Todos
 
@@ -77,11 +80,11 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-06 (plan 04-02 execution)
-Stopped at: Completed 04-02-PLAN.md (User Migration Lambda Implementation)
+Last session: 2026-02-06 (plan 04-03 execution)
+Stopped at: Completed 04-03-PLAN.md (Auth.js Cognito Provider Integration)
 Resume file: None
 
-Next step: User must deploy Lambda function to AWS (follow infra/cognito-setup.md User Migration Lambda Setup section), then proceed to plan 04-03 (Auth.js Cognito Provider Integration)
+Next step: User must complete Cognito setup, deploy Migration Lambda, add environment variables, and test authentication flow before proceeding to plan 04-04 (Dual-write Validation)
 
 ---
-*Last updated: 2026-02-06 after 04-02 completion*
+*Last updated: 2026-02-06 after 04-03 completion*

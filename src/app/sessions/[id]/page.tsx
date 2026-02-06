@@ -1,12 +1,15 @@
 "use client"; // Add use client directive
 
-import { getSessionById, updateSession } from "@/lib/actions/session"; // Import updateSession
+import { getSessionById, updateSession, refreshSessionTranscription } from "@/lib/actions/session"; 
 import { generatePresignedGetObject } from "@/lib/aws/s3";
 import { notFound } from "next/navigation";
 import TranscriptDisplay from "@/components/TranscriptDisplay";
 import React, { useRef, useState, useEffect, use } from "react";
 import NotesEditor from "@/components/NotesEditor";
-import AudioRecorder from "@/components/AudioRecorder"; // Import AudioRecorder
+import AudioRecorder from "@/components/AudioRecorder"; 
+import { AISummary } from "@/components/AISummary";
+import { parseSessionMetrics } from "@/lib/metrics/parser";
+import SpeakerStats from "@/components/SpeakerStats";
 
 interface SessionDetailPageProps {
   params: Promise<{
@@ -18,6 +21,7 @@ export default function SessionDetailPage({ params }: SessionDetailPageProps) {
   const { id } = use(params);
   const [sessionData, setSessionData] = useState<any>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -40,6 +44,24 @@ export default function SessionDetailPage({ params }: SessionDetailPageProps) {
     }
     loadSession();
   }, [id]);
+
+  const handleRefreshStatus = async () => {
+    if (!sessionData?.id) return;
+    setIsRefreshing(true);
+    try {
+      const result = await refreshSessionTranscription(sessionData.id);
+      if (result && typeof result === 'object' && 'id' in result) {
+        setSessionData(result);
+      } else if (result && 'status' in result) {
+        alert(`Transcription status: ${result.status}`);
+      }
+    } catch (error) {
+      console.error("Failed to refresh transcription status:", error);
+      alert("Error checking transcription status.");
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const handleNotesSave = async (newNotes: string) => {
     if (sessionData) {
@@ -66,9 +88,25 @@ export default function SessionDetailPage({ params }: SessionDetailPageProps) {
     }
   };
 
+  const handleRenameSpeaker = async (speakerId: string, newName: string) => {
+    if (!sessionData) return;
+    const currentNames = (sessionData.speakerNames as Record<string, string>) || {};
+    const updatedNames = { ...currentNames, [speakerId]: newName };
+    
+    try {
+      setSessionData((prev: any) => ({ ...prev, speakerNames: updatedNames }));
+      await updateSession(sessionData.id, { speakerNames: updatedNames });
+    } catch (error) {
+      console.error("Failed to rename speaker:", error);
+      alert("Failed to rename speaker.");
+    }
+  };
+
   if (!sessionData) {
     return <div>Loading session...</div>;
   }
+
+  const metrics = sessionData.transcriptJson ? parseSessionMetrics(sessionData.transcriptJson) : null;
 
   return (
     <div className="container mx-auto p-4">
@@ -88,12 +126,46 @@ export default function SessionDetailPage({ params }: SessionDetailPageProps) {
         <AudioRecorder sessionId={sessionData.id} onUploadSuccess={handleAudioUploadSuccess} />
       </div>
 
+      {metrics && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Session Length</h3>
+            <p className="mt-2 text-3xl font-bold text-gray-900">
+              {Math.floor(metrics.totalDuration / 60)}m {Math.floor(metrics.totalDuration % 60)}s
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Words</h3>
+            <p className="mt-2 text-3xl font-bold text-gray-900">{metrics.totalWordCount.toLocaleString()}</p>
+          </div>
+          <SpeakerStats 
+            distribution={metrics.speakerDistribution} 
+            speakerNames={sessionData.speakerNames as Record<string, string>}
+            onRename={handleRenameSpeaker}
+          />
+        </div>
+      )}
+
+      <AISummary sessionId={sessionData.id} initialSummary={sessionData.summary} />
+
       <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-        <h2 className="text-2xl font-semibold mb-2">Transcript</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-semibold">Transcript</h2>
+          {sessionData.transcriptionJobId && !sessionData.transcriptJson && (
+            <button
+              onClick={handleRefreshStatus}
+              disabled={isRefreshing}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-300 transition-colors"
+            >
+              {isRefreshing ? "Checking..." : "Refresh Transcription Status"}
+            </button>
+          )}
+        </div>
         {sessionData.transcriptJson ? (
           <TranscriptDisplay
             transcriptJson={sessionData.transcriptJson}
             audioRef={audioRef}
+            speakerNames={sessionData.speakerNames as Record<string, string>}
           />
         ) : (
           <p className="text-gray-500">No transcript available yet.</p>

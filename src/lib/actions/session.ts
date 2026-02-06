@@ -5,15 +5,57 @@ import { getServerSession } from "next-auth";
 import { authConfig } from "@/auth"; // Using alias for src/auth.ts
 import { createSessionSchema, updateSessionSchema } from "@/validation/session"; // Using alias for src/validation/session.ts
 import { z } from "zod";
-import { startTranscriptionJob } from "@/lib/aws/transcribe"; // Import startTranscriptionJob
+import { startTranscriptionJob, getTranscriptionJobStatus } from "@/lib/aws/transcribe"; 
+import { s3Client } from "@/lib/aws/s3"; 
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 
-// Helper to get current user's ID
 async function getCurrentUserId() {
   const session = await getServerSession(authConfig);
   if (!session || !session.user || !session.user.id) {
     throw new Error("Unauthorized: No active session or user ID.");
   }
   return session.user.id;
+}
+
+export async function refreshSessionTranscription(sessionId: string) {
+  const userId = await getCurrentUserId();
+  const session = await prisma.session.findUnique({
+    where: { id: sessionId, userId: userId },
+  });
+
+  if (!session || !session.transcriptionJobId) {
+    throw new Error("No transcription job found for this session.");
+  }
+
+  const job = await getTranscriptionJobStatus(session.transcriptionJobId);
+
+  if (job?.TranscriptionJobStatus === "COMPLETED" && job.Transcript?.TranscriptFileUri) {
+    // Fetch results from S3
+    const outputUri = job.Transcript.TranscriptFileUri;
+    // Format is s3://bucket-name/key
+    const bucketAndKey = outputUri.replace("s3://", "").split("/");
+    const bucket = bucketAndKey[0];
+    const key = bucketAndKey.slice(1).join("/");
+
+    const s3Response = await s3Client.send(new GetObjectCommand({
+      Bucket: bucket,
+      Key: key,
+    }));
+
+    const transcriptBody = await s3Response.Body?.transformToString();
+    if (transcriptBody) {
+      const transcriptJson = JSON.parse(transcriptBody);
+      
+      return await prisma.session.update({
+        where: { id: sessionId },
+        data: {
+          transcriptJson: transcriptJson,
+        },
+      });
+    }
+  }
+
+  return { status: job?.TranscriptionJobStatus };
 }
 
 export async function createSession(
@@ -26,10 +68,14 @@ export async function createSession(
     data: {
       name: validatedData.name,
       description: validatedData.description ?? null,
+      campaignId: validatedData.campaignId ?? null,
       audioStorageKey: validatedData.audioStorageKey ?? null,
       transcriptionJobId: validatedData.transcriptionJobId ?? null,
       transcriptJson: validatedData.transcriptJson ?? null,
       notes: validatedData.notes ?? null,
+      speakerNames: validatedData.speakerNames ?? null,
+      metrics: validatedData.metrics ?? null,
+      playerRecap: validatedData.playerRecap ?? null,
       userId: userId,
     },
   });
@@ -84,10 +130,14 @@ export async function updateSession(
     data: {
       name: validatedData.name,
       description: validatedData.description ?? null,
+      campaignId: validatedData.campaignId ?? null,
       audioStorageKey: validatedData.audioStorageKey ?? null,
       transcriptionJobId: validatedData.transcriptionJobId ?? null,
       transcriptJson: validatedData.transcriptJson ?? null,
       notes: validatedData.notes ?? null,
+      speakerNames: validatedData.speakerNames ?? undefined,
+      metrics: validatedData.metrics ?? undefined,
+      playerRecap: validatedData.playerRecap ?? undefined,
     },
   });
 

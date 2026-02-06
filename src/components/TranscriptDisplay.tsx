@@ -3,9 +3,10 @@ import React, { useRef, useEffect, useState } from "react";
 interface TranscriptDisplayProps {
   transcriptJson: any; // AWS Transcribe output JSON structure can vary, using 'any' for now
   audioRef: React.RefObject<HTMLAudioElement | null>;
+  speakerNames?: Record<string, string>;
 }
 
-const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({ transcriptJson, audioRef }) => {
+const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({ transcriptJson, audioRef, speakerNames }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const transcriptContainerRef = useRef<HTMLDivElement>(null);
 
@@ -45,8 +46,9 @@ const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({ transcriptJson, a
 
   if (speakerLabels?.segments) {
     speakerLabels.segments.forEach((speakerSegment: any) => {
-      if (!speakerMap[speakerSegment.speaker_label]) {
-        speakerMap[speakerSegment.speaker_label] = `Speaker ${speakerIndex++}`;
+      const label = speakerSegment.speaker_label;
+      if (!speakerMap[label]) {
+        speakerMap[label] = speakerNames?.[label] || label;
       }
     });
   }

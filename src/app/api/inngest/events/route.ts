@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { inngest } from "@/lib/inngest/client";
+import { getServerSession } from "next-auth";
+import { authConfig } from "@/auth";
+import prisma from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,9 +12,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Missing event name or data" }, { status: 400 });
     }
 
-    // For security in a real app, you would verify the user's session 
-    // and check if they have permission (GM role) to trigger this for this sessionId.
-    
+    // Verify user authentication
+    const session = await getServerSession(authConfig);
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    // Verify session ownership if sessionId is provided
+    if (data.sessionId) {
+      const sessionRecord = await prisma.session.findUnique({
+        where: { id: data.sessionId, userId: session.user.id },
+      });
+
+      if (!sessionRecord) {
+        return NextResponse.json({ message: "Session not found or unauthorized" }, { status: 403 });
+      }
+    }
+
     await inngest.send({
       name,
       data,

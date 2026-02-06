@@ -1,5 +1,5 @@
 import { inngest } from "./client";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { summarizeSession } from "@/lib/ai/summarize";
 import { generatePlayerRecap } from "@/lib/ai/recap";
 

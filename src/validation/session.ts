@@ -7,6 +7,7 @@ export const createSessionSchema = z.object({
   audioStorageKey: z.string().optional(),
   transcriptionJobId: z.string().optional(),
   transcriptJson: z.any().optional(), // Using z.any() for Json type
+  transcriptText: z.string().optional(),
   notes: z.string().optional(),
   speakerNames: z.any().optional(),
   metrics: z.any().optional(),
@@ -20,6 +21,7 @@ export const updateSessionSchema = z.object({
   audioStorageKey: z.string().optional(),
   transcriptionJobId: z.string().optional(),
   transcriptJson: z.any().optional(), // Using z.any() for Json type
+  transcriptText: z.string().optional(),
   notes: z.string().optional(),
   speakerNames: z.any().optional(),
   metrics: z.any().optional(),

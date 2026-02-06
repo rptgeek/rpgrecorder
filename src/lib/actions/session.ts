@@ -120,6 +120,7 @@ export async function createSession(
       audioStorageKey: validatedData.audioStorageKey ?? null,
       transcriptionJobId: validatedData.transcriptionJobId ?? null,
       transcriptJson: validatedData.transcriptJson ?? null,
+      transcriptText: validatedData.transcriptText ?? null,
       notes: validatedData.notes ?? null,
       speakerNames: validatedData.speakerNames ?? null,
       metrics: validatedData.metrics ?? null,
@@ -149,6 +150,9 @@ export async function getSessionById(id: string) {
     where: {
       id: id,
       userId: userId, // Ensure ownership
+    },
+    include: {
+      campaign: true,
     },
   });
 
@@ -182,6 +186,7 @@ export async function updateSession(
       audioStorageKey: validatedData.audioStorageKey ?? null,
       transcriptionJobId: validatedData.transcriptionJobId ?? null,
       transcriptJson: validatedData.transcriptJson ?? null,
+      transcriptText: validatedData.transcriptText ?? null,
       notes: validatedData.notes ?? null,
       speakerNames: validatedData.speakerNames ?? undefined,
       metrics: validatedData.metrics ?? undefined,

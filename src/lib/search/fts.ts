@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function searchSessions(query: string, userId: string) {
   if (!query) return [];

@@ -1,25 +1,36 @@
-import NextAuth, { DefaultSession } from "next-auth"
+import NextAuth, { DefaultSession } from "next-auth";
+import { JWT } from "next-auth/jwt";
 
 declare module "next-auth" {
-  /**
-   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
-   */
   interface Session {
     user: {
-      /** The user's postal address. */
-      id: string
-    } & DefaultSession["user"]
+      /** Cognito 'sub' claim - stable ID for DynamoDB partition key */
+      id: string;
+    } & DefaultSession["user"];
+    /** Cognito access token for API calls */
+    accessToken?: string;
+    /** Error flag if token refresh failed */
+    error?: string;
   }
 
   interface User {
-    id: string
+    id: string;
   }
 }
 
 declare module "next-auth/jwt" {
-  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT {
-    /** OpenID ID Token */
-    id: string
+    /** Cognito 'sub' claim */
+    id: string;
+    /** Cognito access token */
+    accessToken?: string;
+    /** Cognito refresh token */
+    refreshToken?: string;
+    /** Cognito ID token */
+    idToken?: string;
+    /** Token expiration timestamp (epoch seconds) */
+    expiresAt?: number;
+    /** Error flag for refresh failures */
+    error?: string;
   }
 }

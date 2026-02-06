@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 4 of 8 (Authentication Migration)
-Plan: 1 of TBD in current phase
+Plan: 2 of TBD in current phase
 Status: In progress
-Last activity: 2026-02-06 — Completed 04-01-PLAN.md (Cognito Infrastructure Setup)
+Last activity: 2026-02-06 — Completed 04-02-PLAN.md (User Migration Lambda Implementation)
 
-Progress: [███░░░░░░░] 38% (3/8 phases complete, v1.0 shipped, Phase 4: 1 plan complete)
+Progress: [███░░░░░░░] 38% (3/8 phases complete, v1.0 shipped, Phase 4: 2 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 23 (22 in v1.0, 1 in v1.1)
-- Average duration: 8 minutes (v1.1 Phase 4)
-- Total execution time: ~1 day (v1.0), ~8 minutes (v1.1 to date)
+- Total plans completed: 24 (22 in v1.0, 2 in v1.1)
+- Average duration: 6.5 minutes (v1.1 Phase 4)
+- Total execution time: ~1 day (v1.0), ~13 minutes (v1.1 to date)
 
 **By Phase:**
 
@@ -30,13 +30,13 @@ Progress: [███░░░░░░░] 38% (3/8 phases complete, v1.0 shippe
 | 1. Foundation & Authentication | Complete | v1.0 | - |
 | 2. Transcription & AI Integration | Complete | v1.0 | - |
 | 3. Player Engagement & Insights | Complete | v1.0 | - |
-| 4. Authentication Migration | 1 | 8 min | 8 min |
+| 4. Authentication Migration | 2 | 13 min | 6.5 min |
 
 **Recent Trend:**
-- v1.1 Phase 4 started: 1 plan complete (8 minutes)
-- First plan established baseline velocity
+- v1.1 Phase 4 started: 2 plans complete (13 minutes)
+- Velocity improving: 8 min → 5 min per plan
 
-*Updated after 04-01 completion*
+*Updated after 04-02 completion*
 
 ## Accumulated Context
 
@@ -53,6 +53,10 @@ Recent decisions affecting current work:
 - 04-01: Use custom:legacy_id attribute for PostgreSQL UUID mapping (enables Cognito ↔ DB correlation)
 - 04-01: Exclude password hashes from export backup (security best practice, AUTH-06)
 - 04-01: Require USER_PASSWORD_AUTH flow for Migration Lambda (enables password validation)
+- 04-02: Use bcrypt 5.x for Lambda compatibility (6.x has native module issues)
+- 04-02: Set Lambda max connections to 1 (efficient for single-threaded Lambda instances)
+- 04-02: Set Lambda timeout to 10 seconds (bcrypt is CPU-intensive)
+- 04-02: Suppress welcome emails for migrated users (better UX for existing users)
 
 ### Pending Todos
 
@@ -73,11 +77,11 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-06 (plan 04-01 execution)
-Stopped at: Completed 04-01-PLAN.md (Cognito Infrastructure Setup)
+Last session: 2026-02-06 (plan 04-02 execution)
+Stopped at: Completed 04-02-PLAN.md (User Migration Lambda Implementation)
 Resume file: None
 
-Next step: User must create Cognito User Pool in AWS Console (follow infra/cognito-setup.md), then proceed to plan 04-02 (User Migration Lambda)
+Next step: User must deploy Lambda function to AWS (follow infra/cognito-setup.md User Migration Lambda Setup section), then proceed to plan 04-03 (Auth.js Cognito Provider Integration)
 
 ---
-*Last updated: 2026-02-06 after 04-01 completion*
+*Last updated: 2026-02-06 after 04-02 completion*

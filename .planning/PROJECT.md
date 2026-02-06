@@ -35,6 +35,18 @@ Provide GMs with an organized, insightful, and searchable review of their TTRPG 
 ## Target User
 Tabletop Role-Playing Game Masters (GMs) who desire a structured system to assist with post-session analysis, continuity tracking, and player engagement.
 
+## Current Milestone: v1.1 - Production Deployment
+
+**Goal:** Deploy the complete application to AWS with infrastructure-as-code, container orchestration, and automated CI/CD pipeline.
+
+**Target features:**
+- CloudFormation templates for all AWS infrastructure (VPC, subnets, RDS, S3, IAM, security groups)
+- Dockerized Next.js application deployed to ECS Fargate
+- GitHub Actions CI/CD pipeline for automated deployments
+- Environment configuration management (environment variables, secrets)
+- Database migration automation in deployment pipeline
+- Cost-optimized infrastructure configuration
+
 ## Requirements
 
 ### Validated
@@ -55,7 +67,7 @@ Tabletop Role-Playing Game Masters (GMs) who desire a structured system to assis
 
 ### Active
 
-(Requirements for next milestone will be defined during /gsd:new-milestone)
+(Requirements for v1.1 milestone will be defined in REQUIREMENTS.md after research phase)
 
 ### Out of Scope
 - Dice roll tracking and analysis.
@@ -75,4 +87,4 @@ Tabletop Role-Playing Game Masters (GMs) who desire a structured system to assis
 | AWS Transcribe for transcription | Reliable, speaker diarization included | ✓ Good - Accurate transcription with speaker identification |
 
 ---
-*Last updated: 2026-02-05 after v1.0 milestone completion*
+*Last updated: 2026-02-05 after v1.1 milestone start*

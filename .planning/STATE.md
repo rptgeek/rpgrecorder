@@ -6,16 +6,16 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core Value:** Provide GMs with an organized, insightful, and searchable review of their TTRPG sessions, facilitating plot development, world-building, and NPC management, while offering tailored, player-facing recaps.
 
-**Current Focus:** Planning next milestone
+**Current Focus:** v1.1 - Production Deployment
 
 ## Current Position
 
-**Phase:** N/A
-**Plan:** N/A
-**Status:** v1.0 milestone complete - Ready to plan next milestone
-**Last activity:** 2026-02-05 — v1.0 milestone shipped
+**Phase:** Not started (defining requirements)
+**Plan:** —
+**Status:** Defining requirements for v1.1 milestone
+**Last activity:** 2026-02-05 — Milestone v1.1 started
 
-**Progress:** Milestone complete (3/3 phases, 22/22 plans)
+**Progress:** Milestone initialization (research phase)
 
 ## Performance Metrics
 

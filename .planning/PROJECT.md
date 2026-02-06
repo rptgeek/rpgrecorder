@@ -35,17 +35,19 @@ Provide GMs with an organized, insightful, and searchable review of their TTRPG 
 ## Target User
 Tabletop Role-Playing Game Masters (GMs) who desire a structured system to assist with post-session analysis, continuity tracking, and player engagement.
 
-## Current Milestone: v1.1 - Production Deployment
+## Current Milestone: v1.1 - Serverless Migration & Production Deployment
 
-**Goal:** Deploy the complete application to AWS with infrastructure-as-code, container orchestration, and automated CI/CD pipeline.
+**Goal:** Migrate application to fully serverless AWS architecture for 65-82% cost reduction, then deploy to production with CI/CD automation.
 
 **Target features:**
-- CloudFormation templates for all AWS infrastructure (VPC, subnets, RDS, S3, IAM, security groups)
-- Dockerized Next.js application deployed to ECS Fargate
+- Migrate authentication from Auth.js → AWS Cognito (JWT-based, client-side tokens)
+- Migrate database from PostgreSQL/Prisma → DynamoDB single-table design
+- Reimplement data access layer with AWS SDK DynamoDB client
+- Redesign search from PostgreSQL FTS → DynamoDB attribute filtering
+- Deploy serverless stack: Lambda (API routes) + S3 + CloudFront + Cognito + DynamoDB
+- ECS Fargate Spot for background jobs (transcription/AI orchestration)
 - GitHub Actions CI/CD pipeline for automated deployments
-- Environment configuration management (environment variables, secrets)
-- Database migration automation in deployment pipeline
-- Cost-optimized infrastructure configuration
+- Cost-optimized architecture targeting ~$18-28/month (vs $60-100 for previous architecture)
 
 ## Requirements
 

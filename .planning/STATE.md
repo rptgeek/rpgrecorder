@@ -2,16 +2,20 @@
 
 ## Project Reference
 
+See: .planning/PROJECT.md (updated 2026-02-05)
+
 **Core Value:** Provide GMs with an organized, insightful, and searchable review of their TTRPG sessions, facilitating plot development, world-building, and NPC management, while offering tailored, player-facing recaps.
 
-**Current Focus:** All v1.0 phases completed.
+**Current Focus:** Planning next milestone
 
 ## Current Position
 
-**Phase:** 3: Player Engagement & Insights
+**Phase:** N/A
 **Plan:** N/A
-**Status:** Phase 3 Completed
-**Progress Bar:** ▰▰▰▰▰▰▰▰▰▰▰▰▰▰ 100%
+**Status:** v1.0 milestone complete - Ready to plan next milestone
+**Last activity:** 2026-02-05 — v1.0 milestone shipped
+
+**Progress:** Milestone complete (3/3 phases, 22/22 plans)
 
 ## Performance Metrics
 
@@ -20,21 +24,19 @@
 ## Accumulated Context
 
 ### Decisions
-- Roadmap structured into 3 phases: Foundation, Core Value, Player Engagement. This aligns with the "quick" depth setting and the suggested research structure.
-- All 13 v1 requirements mapped to exactly one phase.
-- Use Claude 3.5 Sonnet for summarization and PostgreSQL FTS for search (Phase 2).
-- Use Inngest for background job processing (Phase 2).
-- Player recaps use AI reasoning to distinguish player-facing vs GM-only information (Phase 3).
-- Session metrics displayed on session detail page for immediate context (Phase 3).
-- Export options: copy-to-clipboard, PDF generation, shareable public links (Phase 3).
+(See PROJECT.md Key Decisions table for full decision log with outcomes)
+
+**v1.0 Summary:**
+- All 13 requirements delivered and validated
+- Completed 3 phases with 22 plans
+- Production-ready after security audit and fixes
 
 ### Todos
-- Execute Phase 1: Foundation - Recording & Transcription (completed).
-- Execute Phase 2: Core Value - AI Summarization & Search (completed).
-- Execute Phase 3: Player Engagement & Insights (completed).
+- Define requirements for next milestone (use /gsd:new-milestone)
+- Consider: Entity tracking, semantic search, timeline UI, GM notes integration
 
 ### Blockers
-- None.
+- None
 
 
 

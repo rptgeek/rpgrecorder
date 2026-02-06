@@ -1,7 +1,7 @@
 # RPG Session Recorder and Summarizer
 
 ## What This Is
-A tool designed to help Tabletop Role-Playing Game Masters (GMs) record and summarize their sessions for efficient review, improved world-building, and consistent narrative development.
+A complete TTRPG session recording and AI summarization platform that helps Game Masters capture, transcribe, summarize, and share their gameplay sessions. The system provides automatic transcription with speaker identification, AI-powered narrative summaries using Claude 3.5 Sonnet, player-specific recaps that filter GM-only information, and professional export/sharing capabilities.
 
 ## Core Value
 Provide GMs with an organized, insightful, and searchable review of their TTRPG sessions, facilitating plot development, world-building, and NPC management, while offering tailored, player-facing recaps.
@@ -19,26 +19,43 @@ Provide GMs with an organized, insightful, and searchable review of their TTRPG 
 ## Constraints
 *   None explicitly identified yet.
 
+## Context
+
+**Current State (v1.0 shipped 2026-02-05):**
+- ~7,879 lines of TypeScript/React
+- Tech stack: Next.js 14, Prisma, PostgreSQL (AWS RDS), AWS S3, AWS Transcribe, Claude 3.5 Sonnet (via AI SDK), Inngest
+- All 13 v1 requirements delivered and production-ready
+- 3 complete end-to-end user flows verified
+- Security audit passed with all critical issues resolved
+
+**Known Technical Debt:**
+- Metrics field defined in schema but calculated on-demand (not persisted)
+- Phase 1 and Phase 2 missing VERIFICATION.md documentation
+
 ## Target User
 Tabletop Role-Playing Game Masters (GMs) who desire a structured system to assist with post-session analysis, continuity tracking, and player engagement.
 
 ## Requirements
 
 ### Validated
-(None yet — ship to validate)
+
+- ✓ **AUTH-01**: User can create, log in to, and manage their account securely — v1.0
+- ✓ **SESS-01**: User can create, edit, delete, and view their TTRPG sessions — v1.0
+- ✓ **AUDIO-01**: System can record audio during a session — v1.0
+- ✓ **AUDIO-02**: User can upload audio files for processing — v1.0
+- ✓ **TRANS-01**: System automatically transcribes recorded/uploaded audio into text — v1.0
+- ✓ **TRANS-02**: System can identify and differentiate speakers in the transcription — v1.0
+- ✓ **REVIEW-01**: User can play back session audio synchronized with its transcript — v1.0
+- ✓ **NOTES-01**: User can add basic manual notes to a session — v1.0
+- ✓ **AI-01**: System automatically generates an AI-powered summary of the session — v1.0
+- ✓ **SEARCH-01**: User can perform keyword searches within session transcripts — v1.0
+- ✓ **DASH-01**: System provides a dashboard with an overview of sessions within a campaign — v1.0
+- ✓ **RECAP-01**: System can generate player-specific recaps of a session — v1.0
+- ✓ **METRICS-01**: System can provide basic session metrics (e.g., session length) — v1.0
 
 ### Active
 
-- [ ] **REC-01**: System can accept and process pre-session GM notes in text, Markdown, and PDF formats.
-- [ ] **REC-02**: System can record and transcribe in-session voice notes.
-- [ ] **REC-03**: System can identify and extract plot development elements from session data.
-- [ ] **REC-04**: System can identify and extract world-building elements from session data.
-- [ ] **REC-05**: System can identify and extract NPC interactions from session data.
-- [ ] **SUM-01**: System can generate a comprehensive GM summary, integrating GM notes (including un-discovered elements) and transcribed session data.
-- [ ] **SUM-02**: System can generate a player-facing summary based solely on player-experienced session data.
-- [ ] **REV-01**: System can present session data and summaries in an interactive, searchable timeline view.
-- [ ] **REV-02**: Timeline view displays brief event descriptions, snippets, and links to full transcripts.
-- [ ] **EXP-01**: System can export GM and Player summaries for printing or sharing.
+(Requirements for next milestone will be defined during /gsd:new-milestone)
 
 ### Out of Scope
 - Dice roll tracking and analysis.
@@ -47,11 +64,15 @@ Tabletop Role-Playing Game Masters (GMs) who desire a structured system to assis
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Primary focus on "later review" | User emphasized the importance of post-session analysis | Prioritizes robust review features and summarization quality |
-| Prioritize narrative elements over mechanics | User explicitly excluded dice rolls, focusing on plot, world, NPC | System design will center on NLP and content understanding, not combat logs |
-| GM notes to actively enhance summaries | User requested GM notes "enhance the session" for summaries | Requires intelligent integration of pre-session context into summary generation |
-| Dual summaries (GM/Player) | User requested distinct summaries for different audiences | Summarization logic must differentiate content based on target recipient |
-| Interactive timeline for review | User specifically requested timeline view with detail | Core UI for review will be a dynamic, chronological presentation of events |
+| Primary focus on "later review" | User emphasized the importance of post-session analysis | ✓ Good - Delivered transcript playback, search, summaries, and metrics |
+| Prioritize narrative elements over mechanics | User explicitly excluded dice rolls, focusing on plot, world, NPC | ✓ Good - AI summaries focus on narrative (NPCs, plot hooks, items, quotes) |
+| GM notes to actively enhance summaries | User requested GM notes "enhance the session" for summaries | ⚠️ Deferred - Manual notes exist but not integrated into AI summarization (v2) |
+| Dual summaries (GM/Player) | User requested distinct summaries for different audiences | ✓ Good - GM summary + player recap with AI-driven content filtering |
+| Interactive timeline for review | User specifically requested timeline view with detail | ⚠️ Deferred - Transcript display works but not timeline format (v2) |
+| Use Claude 3.5 Sonnet for AI | Best-in-class narrative understanding | ✓ Good - High quality structured summaries and recaps |
+| PostgreSQL FTS for search | No external dependencies, good enough for v1 | ✓ Good - Works well for keyword search, semantic search for v2 |
+| Inngest for background jobs | Keep UI responsive during long AI operations | ✓ Good - Smooth UX with async summarization |
+| AWS Transcribe for transcription | Reliable, speaker diarization included | ✓ Good - Accurate transcription with speaker identification |
 
 ---
-*Last updated: Thursday, February 5, 2026 after initialization*
+*Last updated: 2026-02-05 after v1.0 milestone completion*

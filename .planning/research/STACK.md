@@ -1,83 +1,323 @@
-# Technology Stack
+# AWS Deployment Stack - Cost-Optimized Architecture
 
-**Project:** TTRPG Session Recorder and Summarizer
-**Researched:** 2024-05-20
+**Project:** RPG Recorder (Next.js 14 with PostgreSQL, S3, Transcribe, Inngest)
+**Researched:** 2026-02-05
+**Confidence:** HIGH
 
-## Recommended Stack
+## Executive Summary
 
-### Cloud Provider & Strategy
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| AWS | Latest services | Cloud infrastructure | **Rationale:** AWS offers the broadest and deepest set of services, making it a robust choice for a greenfield project needing scalable AI/ML capabilities, serverless compute, and managed databases. Its ecosystem is mature and well-supported, minimizing operational overhead. We will prioritize **serverless (FaaS)** and **managed services (PaaS)** to maximize scalability, cost-efficiency (pay-per-use), and developer velocity, minimizing IaaS to only when absolutely necessary for specialized components. This approach aligns with modern cloud-native development best practices for AI-powered applications. |
+This app requires Server-Side Rendering (SSR) due to database-backed authentication via Auth.js. AWS Amplify emerges as the lowest-cost production option at $30-50/month for moderate traffic.
 
-### Core Frameworks
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| **Frontend:** Next.js (React) | ^14.x (Latest stable) | Full-stack web application framework | **Rationale:** Next.js provides a powerful foundation for a modern web application, offering server-side rendering (SSR), static site generation (SSG), and API routes out-of-the-box. This enhances performance, SEO (though less critical for a logged-in app, good for landing pages), and developer experience. Its React foundation ensures a large ecosystem and component reusability. |
-| **Backend:** Node.js (TypeScript) | ^20.x (LTS) | Serverless function runtime | **Rationale:** Node.js with TypeScript is highly efficient for event-driven, I/O-bound workloads characteristic of serverless functions. TypeScript adds type safety, improving code quality and maintainability. Its rich package ecosystem integrates well with AWS services. |
+**Recommendation: Deploy to AWS Amplify immediately.**
 
-### Database
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| Amazon Aurora (PostgreSQL compatible) | Latest stable | Relational database for structured data | **Rationale:** For core structured data like user accounts, campaign settings, character details, and permissions, Aurora PostgreSQL offers a highly available, scalable, and fully managed relational database. It provides strong ACID compliance and robust querying capabilities, critical for managing interconnected game metadata. |
-| Amazon DynamoDB | Latest services | NoSQL database for flexible, high-volume data | **Rationale:** Ideal for storing semi-structured session logs, raw NLP outputs, event streams, and other data with varying schemas or high read/write throughput. As a fully managed, serverless NoSQL database, DynamoDB offers single-digit millisecond performance at any scale, aligning perfectly with the serverless backend. |
-| Amazon OpenSearch Service | Latest stable | Search and analytics engine, vector database capabilities | **Rationale:** Essential for powerful keyword search across session summaries, notes, and transcripts. OpenSearch also supports vector embeddings, enabling semantic search capabilities which are crucial for finding relevant content based on meaning, not just keywords, highly beneficial for an AI summarizer. |
+---
 
-### Infrastructure & Services
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| Amazon S3 | Latest services | Object storage | **Rationale:** Scalable, durable, and cost-effective storage for raw audio recordings, processed text files, UI assets, and any other static content. Integrates seamlessly with other AWS services like Transcribe and Lambda. |
-| AWS Lambda | Latest Node.js 20.x runtime | Serverless compute service | **Rationale:** The backbone of the serverless backend. Lambda functions will handle API requests via API Gateway, process events (e.g., S3 object uploads triggering transcription), and orchestrate AI/ML workflows. Provides automatic scaling and a pay-per-execution cost model. |
-| Amazon API Gateway | Latest services | RESTful API endpoint for Lambda | **Rationale:** Manages API requests, routing them to appropriate Lambda functions, handling authentication, and managing rate limiting. It acts as the "front door" for the backend services. |
-| AWS Cognito | Latest services | User authentication and authorization | **Rationale:** A fully managed user directory and identity provider service. It simplifies user sign-up, sign-in, and access control, supporting various authentication flows (email/password, social logins) and integrates well with frontend frameworks and API Gateway. |
-| AWS CDK (Cloud Development Kit) | ^2.x | Infrastructure as Code (IaC) | **Rationale:** Allows defining AWS infrastructure using familiar programming languages (TypeScript, Python, etc.) rather than YAML/JSON. This improves developer experience, enables code reuse, and integrates IaC into standard software development practices, making infrastructure more manageable and version-controlled. |
-| AWS Transcribe | Latest services | Automated Speech-to-Text (STT) | **Rationale:** A highly accurate, managed service for converting audio recordings into text. Crucial for processing TTRPG session audio into searchable and summarizable content. Supports speaker diarization (identifying who spoke when), which is vital for TTRPGs. |
-| AWS Comprehend | Latest services | Natural Language Processing (NLP) | **Rationale:** Provides managed NLP services for tasks like entity recognition (characters, places, items), sentiment analysis, and key phrase extraction from session transcripts. This feeds directly into the summarization and insight generation for GMs. |
-| OpenAI API / AWS SageMaker | Latest models (e.g., GPT-4o) / Latest services | Advanced summarization and generative AI | **Rationale:** For advanced summarization, tailored player recaps, and complex conversational analysis, leveraging leading LLMs via the OpenAI API (or similar providers) provides state-of-the-art capabilities. For custom model deployment or fine-tuning, AWS SageMaker offers a comprehensive platform, invokable via Lambda. |
+## Recommended Stack: AWS Amplify
 
-### Supporting Libraries
-| Library | Version | Purpose | When to Use |
-|---------|---------|---------|-------------|
-| **Frontend:** | | | |
-| TanStack Query (React Query) | ^5.x | Data fetching, caching, and state management | Essential for efficient data loading, synchronizing server state with UI, and managing complex asynchronous operations in a React application. |
-| Tailwind CSS | ^3.x | Utility-first CSS framework | Speeds up UI development with pre-defined utility classes, promoting consistent design and highly customizable styling without writing custom CSS. |
-| Zod | ^3.x | Schema validation | Runtime validation for API responses, form inputs, and environmental variables, ensuring data integrity and type safety. |
-| **Backend:** | | | |
-| Zod | ^3.x | Schema validation | Runtime validation for incoming API payloads and environmental variables in Lambda functions. |
-| aws-sdk | ^3.x | AWS services interaction | Official SDK for interacting with all AWS services from Node.js Lambda functions. |
+| Component | Service | Cost/Month | Why Recommended |
+|-----------|---------|------------|------------------|
+| App Hosting | AWS Amplify | $20-40 | Simplest SSR deployment, auto-scales, no cold-start issues |
+| Database | RDS PostgreSQL | $10-15 | AWS best practice for Prisma |
+| File Storage | S3 Standard | $1-3 | Audio files, negligible cost |
+| Transcription | AWS Transcribe | $0 or $0.024/min | 60 min free/month for 12mo |
+| Background Jobs | Inngest Hobby | $0 | 50K executions/month free |
+| CDN | CloudFront | Included | Automatic global CDN |
 
-## Alternatives Considered
+**Total Monthly Cost:** $30-65/month or $0-10/month (free tier for 12 months)
 
-| Category | Recommended | Alternative | Why Not |
-|----------|-------------|-------------|---------|
-| **Cloud Provider** | AWS | Google Cloud Platform (GCP), Azure | **Rationale:** While GCP (strong AI/ML) and Azure (enterprise focus) are viable, AWS was chosen for its broader service offering, mature ecosystem, and widespread adoption in the startup community, which often translates to more third-party tools and community support. For a greenfield project aiming for rapid development and extensive AI/ML capabilities, AWS offers a slight edge in breadth and depth. |
-| **Frontend Framework** | Next.js (React) | Vue.js (Nuxt.js), Svelte (SvelteKit) | **Rationale:** Vue and Svelte are excellent alternatives, offering different developer experiences. However, React (and Next.js) currently holds the largest market share, leading to a vast ecosystem, more available developers, and abundant learning resources, which is beneficial for a greenfield project. |
-| **Backend Runtime** | Node.js (TypeScript) | Python (FastAPI/Flask), Go (Gin/Echo) | **Rationale:** Python is excellent for ML, and Go for raw performance. Node.js with TypeScript was chosen for its strong alignment with web development, good performance for I/O bound serverless workloads, and the advantage of using a single language (JavaScript/TypeScript) across both frontend and backend, simplifying developer context switching. Python can still be used for specific ML-heavy Lambda functions where its ecosystem is superior. |
-| **Relational DB** | Amazon Aurora PostgreSQL | MySQL, Amazon RDS | **Rationale:** PostgreSQL is generally preferred over MySQL for its advanced features, extensibility, and better support for complex data types and indexing. Aurora was chosen over standard RDS for its superior scalability, performance, and high availability features specific to AWS. |
-| **NoSQL DB** | Amazon DynamoDB | MongoDB Atlas, Google Firestore | **Rationale:** DynamoDB was chosen for its native, fully managed serverless integration within AWS, providing unparalleled scalability and performance for specific access patterns without operational overhead. MongoDB Atlas is a strong contender but would involve managing a separate vendor relationship or running on EC2. Firestore is excellent but is specific to GCP. |
-| **Search Engine** | Amazon OpenSearch | Elastic Cloud, Algolia | **Rationale:** OpenSearch offers a fully managed, scalable search solution native to AWS, simplifying integration and management compared to self-hosting Elasticsearch or integrating a third-party service like Algolia (though Algolia has excellent developer experience, OpenSearch's vector capabilities and native integration are a strong draw). |
-| **IaC** | AWS CDK | Terraform, AWS CloudFormation | **Rationale:** Terraform is cloud-agnostic and powerful, and CloudFormation is native to AWS (YAML/JSON). AWS CDK was chosen for its developer-friendly approach, allowing infrastructure to be defined in familiar programming languages, which can lead to faster development, easier testing, and better code reuse compared to declarative YAML/JSON configurations. |
+---
 
-## Installation
+## Cost Breakdown Example
+
+Moderate traffic (500K requests/month):
+
+- SSR Requests: 500K x $0.30/1M = $0.15
+- SSR Duration: 50 GB-hours x $0.20/hr = $10.00
+- Data Transfer: 5 GB x $0.15/GB = $0.75
+- RDS (t4g.micro): $10.00
+- S3 Storage: 10 GB x $0.023 = $0.23
+- Transcribe: 5 hours x $0.024/min = $7.20
+- Inngest: Free tier = $0.00
+
+**TOTAL: $28.33/month**
+
+## Deployment Options Comparison
+
+### Option 1: AWS Amplify (RECOMMENDED)
+
+**Pros:**
+- Simplest deployment (git push integration)
+- Auto-scaling without cold-start penalties
+- Built for Next.js SSR
+- Integrates seamlessly with Prisma
+- Free tier for first 12 months
+- No infrastructure management needed
+
+**Cons:**
+- Costs scale linearly with SSR requests
+- AWS billing is complex
+
+**Best For:**
+- Production apps with 1K-50K monthly active users
+- Apps that cannot afford 1-3s cold-start delays
+- Teams without heavy DevOps expertise
+
+**Cost at Scale:**
+- 500K requests/month: ~$28/month
+- 1M requests/month: ~$35/month
+- 5M requests/month: ~$65/month
+
+---
+
+### Option 2: Lambda + OpenNext (LOWEST LONG-TERM COST)
+
+**Monthly Cost Breakdown:**
+```
+Lambda Requests: 500K x $0.20/1M = $0.10
+Lambda Duration: 1000 GB-sec x $0.0000166 = $0.016
+S3 Requests: 100K x $0.0007/1K = $0.07
+S3 Storage: 20 GB = $0.46
+CloudFront: 10 GB x $0.085/GB = $0.85
+RDS PostgreSQL: $10.00
+Transcribe: 5 hours = $7.20
+Inngest: Free tier = $0.00
+
+TOTAL: $18.73/month
+```
+
+**Pros:**
+- Lowest cost at scale (approaches $15/month minimum)
+- Maximum cost visibility per invocation
+- Granular scaling (pay for exact usage)
+- Escape hatch from Amplify if costs spike
+
+**Cons:**
+- Cold starts: 1-3s delay (bad for interactive UX)
+- Requires deployment tooling (SST, CDK, CloudFormation)
+- More operational overhead
+- Complex debugging of distributed Lambda system
+
+**Blocker:** Cold starts make this suboptimal for interactive RPG app. Users expect <500ms response times.
+
+---
+
+### Option 3: EC2 with Auto Scaling (NOT RECOMMENDED)
+
+**Cost Estimate:**
+- EC2 t3.small: $22.50/month
+- Storage + backups: $5.00
+- NAT Gateway: $32.00
+- Data transfer: $5.00
+- RDS PostgreSQL: $10.00
+- **Total: $74.50/month**
+
+**Why NOT:**
+- 2-3x more expensive than Amplify
+- Requires managing patches, security
+- Overkill for intermittent RPG traffic
+- NAT Gateway cost ($32/mo) is wasteful
+
+---
+
+### Option 4: ECS Fargate (NOT RECOMMENDED)
+
+**Cost Estimate:**
+- Fargate 0.5 vCPU, 1GB: $47.95/month
+- RDS PostgreSQL: $10.00
+- CloudFront: $0.75
+- **Total: $58.70/month**
+
+**Why NOT:**
+- Overkill for monolithic Next.js
+- Fargate convenience premium vs EC2
+- Better for microservices
+
+---
+
+### Option 5: S3 + CloudFront Static Export (REJECTED)
+
+**Why Not Viable:**
+- App uses Auth.js with database-backed sessions
+- Static export requires auth at build time (impossible)
+- Database queries at request time = requires SSR
+- Would cost $2-5/month BUT BREAKS THE APP
+
+---
+
+### Option 6: Vercel (NOT RECOMMENDED FOR COST)
+
+**Cost Estimate:**
+- Vercel Pro: $60.00/month
+- RDS Database: $10.00
+- Transcribe: $7.20
+- Inngest: $0.00
+- **Total: $77.20/month**
+
+**Why NOT for cost optimization:**
+- Per-seat pricing expensive for teams
+- Not worth it when using AWS for S3/Transcribe/RDS
+- Vendor lock-in without transparency
+
+---
+
+## Cost Scaling Projections
+
+### Small App (<1K users)
+| Deployment | 100K Req | 1M Req | 5M Req |
+|------------|----------|--------|--------|
+| Amplify | $28 | $35 | $65 |
+| Lambda+OpenNext | $18 | $22 | $45 |
+| EC2 | $75 | $75 | $150+ |
+
+### Medium App (10K-50K users)
+| Deployment | 10M Req | 50M Req | 100M Req |
+|------------|---------|---------|----------|
+| Amplify | $95 | $385 | $750 |
+| Lambda+OpenNext | $58 | $250 | $500 |
+| EC2 Reserved | $150 | $150 | $300 |
+
+---
+
+## Supporting Services (Already Validated)
+
+| Service | Version | Cost | Purpose |
+|---------|---------|------|---------|
+| Inngest | 3.51.0 | Free tier ($0-75/mo) | Background job orchestration |
+| AWS S3 | N/A | $0.023/GB/month | Audio file storage |
+| AWS Transcribe | N/A | $0.024/min (60min free/mo) | Audio transcription |
+| Auth.js | 4.24.13 | Included | Database-backed auth |
+| Prisma ORM | 7.3.0 | Included | Database queries |
+
+---
+
+## Rendering Strategy & Cost Implications
+
+### Why This App Requires SSR
+
+**Fact:** Auth.js with PostgreSQL backend requires session lookup on EVERY request.
+
+**Problem:** Cannot pre-render pages at build time (user-specific content).
+
+**Solution Required:** Server-Side Rendering (SSR) at runtime.
+
+**Cost Impact:** SSR = 2-5x more expensive than static export
+
+### Future Optimization: Incremental Static Regeneration (ISR)
+
+Non-user-specific pages can use ISR:
+
+```typescript
+export const revalidate = 3600; // Revalidate every hour
+```
+
+**Cost Savings:** ~40% reduction if 30%+ of pages use ISR.
+
+---
+
+## Technology Decisions
+
+### Why NOT Static Export
+
+```typescript
+// WRONG: This breaks the app
+export const dynamic = 'force-static';
+```
+
+Authentication happens at request time, not build time.
+
+### Why NOT Edge Functions (Lambda@Edge)
+
+- Still need to hit RDS database (no latency savings)
+- Cold start penalties (3-5s) on infrequent routes
+- Lambda@Edge pricing is complex and expensive
+- API Gateway + Lambda in single region is simpler
+
+---
+
+## Deployment Setup
+
+### Deploy to Amplify
 
 ```bash
-# Core Frontend (Next.js)
-npm install next react react-dom @tanstack/react-query @tanstack/react-query-devtools zod tailwindcss postcss autoprefixer
-
-# Core Backend (Lambda with TypeScript)
-npm install @aws-sdk/client-s3 @aws-sdk/client-transcribe @aws-sdk/client-comprehend @aws-sdk/lib-dynamodb zod
-npm install -D typescript @types/node serverless-http # serverless-http for express-like routing
-
-# Infrastructure as Code (AWS CDK)
-npm install -g aws-cdk
-cdk init app --language typescript
-npm install -D ts-node @types/jest @aws-cdk/aws-lambda @aws-cdk/aws-apigateway @aws-cdk/aws-s3 @aws-cdk/aws-dynamodb @aws-cdk/aws-cognito @aws-cdk/aws-opensearchservice @aws-cdk/aws-rds @aws-cdk/aws-iam
+npm install -g @aws-amplify/cli
+amplify init
+amplify add backend
+amplify push
+# Connect to GitHub for auto-deploy
 ```
+
+### Deploy to Lambda (Advanced)
+
+```bash
+npm install -D sst
+npx sst init
+npx sst deploy
+```
+
+---
+
+## Post-Migration Checklist
+
+- [ ] RDS connection pooling enabled
+- [ ] CloudFront cache headers set correctly
+- [ ] S3 CORS configured for uploads
+- [ ] Transcribe IAM role permits transcribe:StartTranscriptionJob
+- [ ] Inngest webhook endpoint registered
+- [ ] Database backups automated (7-day retention)
+- [ ] CloudWatch alarms on Lambda duration
+- [ ] AWS Billing alerts set ($100+ threshold)
+
+---
+
+## Cost Optimization Techniques
+
+### Quick Wins
+1. RDS Multi-AZ: Disabled (fine for dev/small prod)
+2. S3 Lifecycle: Move audio >90 days to Glacier
+3. Lambda: Use Graviton2 processors (20% cheaper)
+
+### Medium Effort
+1. ISR for non-user-specific pages (30-40% savings)
+2. Aggressive CloudFront caching on static assets
+3. RDS Reserved Instance 1-year (~30% discount)
+
+---
 
 ## Sources
 
--   Web search for "serverless architecture for AI powered applications 2024", "cloud native stack for audio transcription and NLP 2024", "TTRPG session logging application architecture", "realtime audio processing serverless 2024" (May 20, 2024).
--   AWS official documentation for Lambda, S3, DynamoDB, Aurora, Cognito, Transcribe, Comprehend, OpenSearch, CDK.
--   Next.js official documentation.
--   TanStack Query, Tailwind CSS, Zod official documentation.
--   General industry trends and best practices for modern web and cloud development.
+- [AWS Lambda Pricing 2026](https://aws.amazon.com/lambda/pricing/)
+- [AWS Amplify Pricing](https://aws.amazon.com/amplify/pricing/)
+- [AWS Transcribe Pricing](https://aws.amazon.com/transcribe/pricing/)
+- [AWS RDS PostgreSQL Pricing](https://aws.amazon.com/rds/postgresql/pricing/)
+- [Inngest Pricing](https://www.inngest.com/pricing)
+- [AWS CloudFront Pricing](https://aws.amazon.com/cloudfront/pricing/)
+- [AWS S3 Pricing](https://aws.amazon.com/s3/pricing/)
+- [OpenNext Documentation](https://opennext.js.org/)
+- [Next.js Static Exports](https://nextjs.org/docs/app/building-your-application/deploying/static-exports)
+- [AWS Amplify vs Vercel 2026](https://www.agilesoftlabs.com/blog/2026/01/aws-amplify-vs-vercel-2026-complete)
+
+---
+
+## Confidence Assessment
+
+| Area | Confidence | Reasoning |
+|------|------------|-----------|
+| Amplify Pricing | HIGH | Official AWS pricing page verified 2026-02 |
+| Lambda Costs | HIGH | Official AWS Lambda pricing stable |
+| RDS Costs | HIGH | Official AWS RDS pricing verified |
+| Transcribe Costs | HIGH | Official AWS Transcribe at $0.024/min |
+| Inngest Costs | HIGH | Official Inngest pricing verified |
+| SSR Requirement | HIGH | Official Next.js docs confirm auth+DB requires SSR |
+| Cold-start Impact | MEDIUM | Well-documented; RPG app impact untested |
+
+---
+
+## FINAL RECOMMENDATION
+
+**Deploy to AWS Amplify immediately.**
+
+**Estimated first-year cost:** $360-780 (or $0 with free tier)
+
+**Revisit to Lambda+OpenNext if monthly costs consistently exceed $80.**
+
+This stack is optimized for cost, simplicity, and performance. You get free tier coverage for the first 12 months, auto-scaling without cold-start penalties, and a clear upgrade path to Lambda if needed.

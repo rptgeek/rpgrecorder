@@ -9,12 +9,60 @@ import { startTranscriptionJob, getTranscriptionJobStatus } from "@/lib/aws/tran
 import { s3Client } from "@/lib/aws/s3"; 
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 
+import { nanoid } from "nanoid";
+
 async function getCurrentUserId() {
   const session = await getServerSession(authConfig);
   if (!session || !session.user || !session.user.id) {
     throw new Error("Unauthorized: No active session or user ID.");
   }
   return session.user.id;
+}
+
+export async function getPublicSessionByToken(token: string) {
+  const session = await prisma.session.findUnique({
+    where: {
+      shareToken: token,
+    },
+    select: {
+      name: true,
+      createdAt: true,
+      playerRecap: true,
+      campaign: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+
+  if (!session) {
+    return null;
+  }
+  return session;
+}
+
+export async function generateShareToken(sessionId: string) {
+  const userId = await getCurrentUserId();
+  
+  const existingSession = await prisma.session.findUnique({
+    where: { id: sessionId, userId: userId },
+  });
+
+  if (!existingSession) {
+    throw new Error("Session not found or unauthorized.");
+  }
+
+  const token = nanoid(12);
+  
+  const updatedSession = await prisma.session.update({
+    where: { id: sessionId },
+    data: {
+      shareToken: token,
+    },
+  });
+
+  return updatedSession.shareToken;
 }
 
 export async function refreshSessionTranscription(sessionId: string) {

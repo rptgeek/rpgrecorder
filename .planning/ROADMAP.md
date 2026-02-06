@@ -42,10 +42,13 @@
   3. User sessions persist across browser restarts using JWT refresh tokens
   4. All user data exported and backed up before migration cutover
   5. Cognito "sub" claim available as stable partition key for DynamoDB
-**Plans**: TBD
+**Plans**: 4 plans in 4 waves
 
 Plans:
-- [ ] 04-01: TBD during planning
+- [ ] 04-01-PLAN.md — Cognito infrastructure docs + user data backup
+- [ ] 04-02-PLAN.md — User Migration Lambda for just-in-time migration
+- [ ] 04-03-PLAN.md — Auth.js Cognito provider integration
+- [ ] 04-04-PLAN.md — End-to-end verification checkpoint
 
 #### Phase 5: Database Migration & Validation
 **Goal**: All application data migrated from PostgreSQL to DynamoDB with validated consistency
@@ -134,11 +137,11 @@ Phases execute in numeric order: 4 → 5 → 6 → 7 → 8
 | 1. Foundation & Authentication | v1.0 | Complete | Complete | 2026-02-05 |
 | 2. Transcription & AI Integration | v1.0 | Complete | Complete | 2026-02-05 |
 | 3. Player Engagement & Insights | v1.0 | Complete | Complete | 2026-02-05 |
-| 4. Authentication Migration | v1.1 | 0/TBD | Not started | - |
+| 4. Authentication Migration | v1.1 | 0/4 | Planned | - |
 | 5. Database Migration & Validation | v1.1 | 0/TBD | Not started | - |
 | 6. API Cutover to DynamoDB | v1.1 | 0/TBD | Not started | - |
 | 7. Serverless Deployment | v1.1 | 0/TBD | Not started | - |
 | 8. Traffic Migration & Production Cutover | v1.1 | 0/TBD | Not started | - |
 
 ---
-*Last updated: 2026-02-06 after v1.1 roadmap creation*
+*Last updated: 2026-02-06 after Phase 4 planning*

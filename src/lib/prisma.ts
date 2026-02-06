@@ -8,7 +8,12 @@ if (!connectionString) {
   throw new Error('DATABASE_URL is not set');
 }
 
-const pool = new pg.Pool({ connectionString });
+const pool = new pg.Pool({ 
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 

@@ -2,6 +2,7 @@ import { getCampaigns } from "@/lib/actions/campaign";
 import { getSessions } from "@/lib/actions/session";
 import CampaignList from "@/components/CampaignList";
 import CreateCampaignForm from "@/components/CreateCampaignForm";
+import { SearchBar } from "@/components/SearchBar";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/auth";
@@ -32,10 +33,11 @@ export default async function DashboardPage() {
           <h1 className="text-4xl font-extrabold text-gray-900">GM Dashboard</h1>
           <p className="text-gray-600">Manage your campaigns and review recorded sessions.</p>
         </div>
-        <div className="flex gap-4">
+        <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+          <SearchBar />
           <Link
             href="/sessions/new"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition-colors whitespace-nowrap"
           >
             Record New Session
           </Link>

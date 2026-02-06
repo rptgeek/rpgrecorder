@@ -2,13 +2,25 @@
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import ExportControls from "./ExportControls";
 
 interface PlayerRecapViewProps {
   sessionId: string;
   initialRecap?: string | null;
+  sessionName: string;
+  campaignName?: string;
+  date: string;
+  shareToken: string | null;
 }
 
-export function PlayerRecapView({ sessionId, initialRecap }: PlayerRecapViewProps) {
+export function PlayerRecapView({ 
+  sessionId, 
+  initialRecap, 
+  sessionName, 
+  campaignName, 
+  date, 
+  shareToken 
+}: PlayerRecapViewProps) {
   const [recap, setRecap] = useState(initialRecap);
   const [isRegenerating, setIsRegenerating] = useState(false);
 
@@ -76,9 +88,18 @@ export function PlayerRecapView({ sessionId, initialRecap }: PlayerRecapViewProp
           No player recap available yet. This recap is filtered to be spoiler-free.
         </div>
       ) : (
-        <div className="prose max-w-none prose-indigo">
-          <ReactMarkdown>{recap}</ReactMarkdown>
-        </div>
+        <>
+          <div className="prose max-w-none prose-indigo">
+            <ReactMarkdown>{recap}</ReactMarkdown>
+          </div>
+          <ExportControls
+            sessionName={sessionName}
+            campaignName={campaignName}
+            date={date}
+            playerRecap={recap}
+            shareToken={shareToken}
+          />
+        </>
       )}
       
       <div className="mt-4 pt-4 border-t border-gray-100 text-xs text-gray-500">

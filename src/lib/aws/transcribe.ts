@@ -7,10 +7,6 @@ const awsTranscribeIamRoleArn = process.env.AWS_TRANSCRIBE_IAM_ROLE_ARN!;
 
 export const transcribeClient = new TranscribeClient({
   region: awsRegion,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
 });
 
 export async function startTranscriptionJob(
@@ -52,5 +48,19 @@ export async function startTranscriptionJob(
   } catch (error) {
     console.error("Error starting Transcribe job:", error);
     throw new Error("Failed to start transcription job.");
+  }
+}
+
+export async function getTranscriptionJobStatus(jobName: string) {
+  try {
+    const { GetTranscriptionJobCommand } = await import("@aws-sdk/client-transcribe");
+    const command = new GetTranscriptionJobCommand({
+      TranscriptionJobName: jobName,
+    });
+    const response = await transcribeClient.send(command);
+    return response.TranscriptionJob;
+  } catch (error) {
+    console.error("Error getting transcription job status:", error);
+    throw new Error("Failed to get transcription job status.");
   }
 }

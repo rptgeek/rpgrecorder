@@ -149,7 +149,14 @@ export default function SessionDetailPage({ params }: SessionDetailPageProps) {
 
       <AISummary sessionId={sessionData.id} initialSummary={sessionData.summary} />
 
-      <PlayerRecapView sessionId={sessionData.id} initialRecap={sessionData.playerRecap} />
+      <PlayerRecapView 
+        sessionId={sessionData.id} 
+        initialRecap={sessionData.playerRecap}
+        sessionName={sessionData.name}
+        campaignName={sessionData.campaign?.name}
+        date={new Date(sessionData.createdAt).toLocaleDateString()}
+        shareToken={sessionData.shareToken}
+      />
 
       <div className="mt-8 p-4 bg-gray-50 rounded-lg">
         <div className="flex justify-between items-center mb-4">

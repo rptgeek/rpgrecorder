@@ -60,8 +60,23 @@ export async function POST(req: NextRequest) {
 
     const transcriptionResult = JSON.parse(await Body.transformToString());
     
-    // Update session with transcriptJson
-    await updateSession(sessionId, { transcriptJson: transcriptionResult });
+    // Flatten transcript to plain text for search and AI
+    const transcriptText = transcriptionResult.results?.transcripts
+      ?.map((t: any) => t.transcript)
+      .join(" ") || "";
+
+    // Update session with transcriptJson and flattened text
+    await updateSession(sessionId, { 
+      transcriptJson: transcriptionResult,
+      transcriptText: transcriptText
+    });
+
+    // Trigger AI summarization via Inngest (Plan 02-03)
+    const { inngest } = await import("@/lib/inngest/client");
+    await inngest.send({
+      name: "session/transcription.completed",
+      data: { sessionId },
+    });
 
     return NextResponse.json({ message: `Successfully processed transcription for session ${sessionId}` }, { status: 200 });
   } catch (error) {

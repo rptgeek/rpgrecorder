@@ -1,12 +1,12 @@
 import NextAuth from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+// import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 
 export const authConfig: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -49,9 +49,6 @@ export const authConfig: NextAuthOptions = {
     },
   },
   secret: process.env.NEXTAUTH_SECRET || "fallback-secret-for-dev",
-  pages: {
-    signIn: "/auth/signin", // You might want to create this page later
-  },
 };
 
-export default NextAuth(authConfig);
+

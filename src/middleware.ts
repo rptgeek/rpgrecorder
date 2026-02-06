@@ -1,9 +1,7 @@
 import { withAuth } from "next-auth/middleware";
 
 export default withAuth({
-  pages: {
-    signIn: "/api/auth/signin", // Redirect unauthenticated users here
-  },
+  // Use default pages if custom ones aren't ready
 });
 
 export const config = {

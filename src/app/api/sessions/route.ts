@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
     const newSession = await createSession({
       name: validatedData.name,
       description: validatedData.description,
+      campaignId: validatedData.campaignId,
     });
 
     return NextResponse.json(newSession, { status: 201 });

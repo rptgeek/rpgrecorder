@@ -8,6 +8,7 @@ import React, { useRef, useState, useEffect, use } from "react";
 import NotesEditor from "@/components/NotesEditor";
 import AudioRecorder from "@/components/AudioRecorder"; 
 import { AISummary } from "@/components/AISummary";
+import { PlayerRecapView } from "@/components/PlayerRecapView";
 import { parseSessionMetrics } from "@/lib/metrics/parser";
 import SpeakerStats from "@/components/SpeakerStats";
 
@@ -147,6 +148,8 @@ export default function SessionDetailPage({ params }: SessionDetailPageProps) {
       )}
 
       <AISummary sessionId={sessionData.id} initialSummary={sessionData.summary} />
+
+      <PlayerRecapView sessionId={sessionData.id} initialRecap={sessionData.playerRecap} />
 
       <div className="mt-8 p-4 bg-gray-50 rounded-lg">
         <div className="flex justify-between items-center mb-4">

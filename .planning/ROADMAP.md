@@ -62,11 +62,11 @@ This roadmap outlines the phased development for the TTRPG Session Recorder and 
 3.  User can access a dashboard that presents an overview of their created campaigns and lists the sessions within each campaign.
 
 **Plans:** 5 plans
-- [ ] 2-01-PLAN.md — Database & Background Job Setup
-- [ ] 2-02-PLAN.md — Search Engine & Text Persistence
-- [ ] 2-03-PLAN.md — AI Summarization Pipeline
-- [ ] 2-04-PLAN.md — Campaign Management & Dashboard
-- [ ] 2-05-PLAN.md — Integrated Features UI
+- [x] 2-01-PLAN.md — Database & Background Job Setup
+- [x] 2-02-PLAN.md — Search Engine & Text Persistence
+- [x] 2-03-PLAN.md — AI Summarization Pipeline
+- [x] 2-04-PLAN.md — Campaign Management & Dashboard
+- [x] 2-05-PLAN.md — Integrated Features UI
 
 ### Phase 3: Player Engagement & Insights
 
@@ -81,6 +81,11 @@ This roadmap outlines the phased development for the TTRPG Session Recorder and 
 **Success Criteria:**
 1.  User can generate a distinct summary (recap) of a session specifically for players, which omits GM-only information.
 2.  User can view basic analytical metrics for each session, such as total duration, word count, and number of unique speakers.
+
+**Plans:** 3 plans
+- [ ] 03-01-PLAN.md — Metrics & Speaker Foundation
+- [ ] 03-02-PLAN.md — AI Player Recaps
+- [ ] 03-03-PLAN.md — Sharing & Export
 
 ## Progress
 

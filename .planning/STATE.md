@@ -8,9 +8,9 @@
 
 ## Current Position
 
-**Phase:** 1: Foundation - Recording & Transcription
+**Phase:** 2: Core Value - AI Summarization & Search
 **Plan:** N/A
-**Status:** Phase 1 Completed
+**Status:** Phase 2 Completed
 **Progress Bar:** ▰▰▰▰▰▰▰▰▰▰▰▰▰▰ 100%
 
 ## Performance Metrics
@@ -22,23 +22,16 @@
 ### Decisions
 - Roadmap structured into 3 phases: Foundation, Core Value, Player Engagement. This aligns with the "quick" depth setting and the suggested research structure.
 - All 13 v1 requirements mapped to exactly one phase.
+- Use Claude 3.5 Sonnet for summarization and PostgreSQL FTS for search (Phase 2).
+- Use Inngest for background job processing (Phase 2).
 
 ### Todos
+- Plan 02-01: Setup Campaigns, AI fields, and Inngest (completed).
+- Plan 02-02: Implement Postgres FTS and Search API (completed).
+- Plan 02-03: AI Summarization with Claude 3.5 (completed).
+- Plan 02-04: Campaign Management and Dashboard (completed).
+- Plan 02-05: Integrated Search and AI UI (completed).
 - Execute Phase 1: Foundation - Recording & Transcription (completed).
-- Plan 1-01: Database & Prisma Setup (completed).
-- Plan 1-02: Auth.js Integration (completed).
-- Plan 1-03: Session Management API (completed).
-- Plan 1-04: AWS S3 Presigned URL API (completed).
-- Plan 1-05: Client-side Audio Recording & S3 Upload UI (completed).
-- Plan 1-06: AWS Transcribe Integration & Data Storage (completed).
-- Plan 1-07: Session View UI & Basic Transcript Display (completed).
-- Plan 1-08: Synchronized Transcript Playback (completed).
-- Plan 1-09: Basic Manual Notes Feature (completed).
-- Plan 1-10: Implement basic authentication UI components and route protection middleware using Auth.js (completed).
-- Plan 1-11: Implement an API endpoint to securely generate presigned URLs for direct client-side upload of audio files to AWS S3 (completed).
-- Plan 1-12: Implement RESTful API endpoints for session CRUD operations, secured by authentication (completed).
-- Plan 1-13: Client-side Audio Recording & S3 Upload UI (completed).
-- Plan 1-14: AWS Transcribe Job Trigger & Polling (completed).
 
 ### Blockers
 - None.

@@ -29,16 +29,21 @@ This roadmap outlines the phased development for the TTRPG Session Recorder and 
 4.  User can view a session transcript with clearly differentiated speakers and play back the original audio synchronized with the highlighted text.
 5.  User can add, edit, and save basic manual notes associated with a specific session.
 
-**Plans:** 9 plans
-- [ ] 1-01-PLAN.md — Database & Prisma Setup
-- [ ] 1-02-PLAN.md — Auth.js Integration
-- [ ] 1-03-PLAN.md — Session Management API
-- [ ] 1-04-PLAN.md — AWS S3 Presigned URL API
-- [ ] 1-05-PLAN.md — Client-side Audio Recording & S3 Upload UI
-- [ ] 1-06-PLAN.md — AWS Transcribe Integration & Data Storage
-- [ ] 1-07-PLAN.md — Session View UI & Basic Transcript Display
-- [ ] 1-08-PLAN.md — Synchronized Transcript Playback
-- [ ] 1-09-PLAN.md — Basic Manual Notes Feature
+**Plans:** 14 plans
+- [x] 1-01-PLAN.md — Database & Prisma Setup
+- [x] 1-02-PLAN.md — Auth.js Integration
+- [x] 1-03-PLAN.md — Session Management API
+- [x] 1-04-PLAN.md — AWS S3 Presigned URL API
+- [x] 1-05-PLAN.md — Client-side Audio Recording & S3 Upload UI
+- [x] 1-06-PLAN.md — AWS Transcribe Integration & Data Storage
+- [x] 1-07-PLAN.md — Session View UI & Basic Transcript Display
+- [x] 1-08-PLAN.md — Synchronized Transcript Playback
+- [x] 1-09-PLAN.md — Basic Manual Notes Feature
+- [x] 1-10-PLAN.md — Auth UI & Middleware
+- [x] 1-11-PLAN.md — Presigned URL API
+- [x] 1-12-PLAN.md — Session CRUD APIs
+- [x] 1-13-PLAN.md — Audio Upload UI
+- [x] 1-14-PLAN.md — Transcribe Trigger & Webhook
 
 ### Phase 2: Core Value - AI Summarization & Search
 
@@ -55,6 +60,13 @@ This roadmap outlines the phased development for the TTRPG Session Recorder and 
 1.  User can view an AI-generated summary for any completed session that accurately reflects the key events and outcomes.
 2.  User can perform a keyword search within a session's transcript and see all occurrences highlighted, with context.
 3.  User can access a dashboard that presents an overview of their created campaigns and lists the sessions within each campaign.
+
+**Plans:** 5 plans
+- [ ] 2-01-PLAN.md — Database & Background Job Setup
+- [ ] 2-02-PLAN.md — Search Engine & Text Persistence
+- [ ] 2-03-PLAN.md — AI Summarization Pipeline
+- [ ] 2-04-PLAN.md — Campaign Management & Dashboard
+- [ ] 2-05-PLAN.md — Integrated Features UI
 
 ### Phase 3: Player Engagement & Insights
 
@@ -75,5 +87,5 @@ This roadmap outlines the phased development for the TTRPG Session Recorder and 
 | Phase | Status |
 |-------|--------|
 | 1     | Complete |
-| 2     | Pending |
+| 2     | Complete |
 | 3     | Pending |

@@ -70,17 +70,31 @@ The following features are explicitly not planned for this project:
 This section will be filled in during the roadmap creation to link requirements to specific phases and tasks.
 
 | Requirement | Phase | Status |
+
 |-------------|-------|--------|
+
 | AUTH-01     | Phase 1 | Completed |
+
 | SESS-01     | Phase 1 | Completed |
+
 | AUDIO-01    | Phase 1 | Completed |
+
 | AUDIO-02    | Phase 1 | Completed |
+
 | TRANS-01    | Phase 1 | Completed |
+
 | TRANS-02    | Phase 1 | Completed |
+
 | REVIEW-01   | Phase 1 | Completed |
+
 | NOTES-01    | Phase 1 | Completed |
-| AI-01       | Phase 2 | Pending |
-| SEARCH-01   | Phase 2 | Pending |
-| DASH-01     | Phase 2 | Pending |
+
+| AI-01       | Phase 2 | Completed |
+
+| SEARCH-01   | Phase 2 | Completed |
+
+| DASH-01     | Phase 2 | Completed |
+
 | RECAP-01    | Phase 3 | Pending |
+
 | METRICS-01  | Phase 3 | Pending |

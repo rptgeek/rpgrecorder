@@ -213,9 +213,80 @@ aws cognito-idp describe-user-pool --user-pool-id YOUR_POOL_ID
 aws cognito-idp describe-user-pool-client --user-pool-id YOUR_POOL_ID --client-id YOUR_CLIENT_ID
 ```
 
+## User Migration Lambda Setup
+
+The User Migration Lambda enables just-in-time migration of existing users from PostgreSQL to Cognito.
+
+### Prerequisites
+- Cognito User Pool created (previous section)
+- DATABASE_URL for PostgreSQL available
+- AWS CLI configured with appropriate permissions
+
+### Step 1: Build Lambda Package
+
+```bash
+cd infra/lambda/user-migration
+npm install
+npx tsc
+# Create deployment package
+zip -r ../user-migration.zip dist/ node_modules/
+```
+
+### Step 2: Create Lambda Function
+
+1. Go to AWS Lambda Console
+2. Create function:
+   - Name: `rpg-user-migration`
+   - Runtime: Node.js 20.x
+   - Architecture: x86_64
+   - Handler: `dist/index.handler`
+
+3. Upload the zip file from `infra/lambda/user-migration.zip`
+
+### Step 3: Configure Environment Variables
+
+In Lambda Configuration -> Environment Variables:
+- `DATABASE_URL`: Your PostgreSQL connection string
+
+### Step 4: Configure VPC (if RDS is in VPC)
+
+In Lambda Configuration -> VPC:
+- Select the VPC containing your RDS instance
+- Select subnets with RDS access
+- Select security group allowing PostgreSQL port (5432)
+
+### Step 5: Set Lambda Timeout
+
+In Lambda Configuration -> General:
+- Timeout: 10 seconds (bcrypt is CPU-intensive)
+- Memory: 256 MB minimum
+
+### Step 6: Attach to Cognito User Pool
+
+1. Go to Cognito Console -> Your User Pool
+2. Navigate to: User Pool Properties -> Triggers
+3. Under "User Migration":
+   - Select the `rpg-user-migration` Lambda function
+4. Save changes
+
+### Testing the Lambda
+
+Test with a known user:
+1. Attempt sign-in to Cognito with existing PostgreSQL credentials
+2. Lambda should validate and create user in Cognito
+3. Check CloudWatch logs for migration output
+
+### Rollback
+
+If issues occur:
+1. Remove Lambda trigger from Cognito User Pool
+2. Users will fail sign-in (expected)
+3. Investigate CloudWatch logs
+4. Re-attach trigger after fix
+
 ## Migration-Specific Configuration
 
-The User Pool is now ready for the User Migration Lambda trigger, which will be configured in a later phase. The key settings that enable migration are:
+The User Pool is now ready for the User Migration Lambda trigger. The key settings that enable migration are:
 
 1. **USER_PASSWORD_AUTH enabled** - Lambda receives the password for validation
 2. **custom:legacy_id attribute** - Maps Cognito users to PostgreSQL users
@@ -224,10 +295,11 @@ The User Pool is now ready for the User Migration Lambda trigger, which will be 
 ## Next Steps
 
 1. ✓ User Pool created with correct configuration
-2. ⏸️ Environment variables documented (add to `.env.local`)
-3. ⏸️ User Migration Lambda implementation (Phase 04-02)
-4. ⏸️ Auth.js Cognito Provider integration (Phase 04-03)
-5. ⏸️ Dual-write validation (Phase 04-04)
+2. ✓ User Migration Lambda implementation complete
+3. ⏸️ Environment variables documented (add to `.env.local`)
+4. ⏸️ Deploy Lambda function to AWS
+5. ⏸️ Auth.js Cognito Provider integration (Phase 04-03)
+6. ⏸️ Dual-write validation (Phase 04-04)
 
 ## Troubleshooting
 

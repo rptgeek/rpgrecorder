@@ -29,6 +29,7 @@
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.37",
     "@auth/prisma-adapter": "^2.11.1",
+    "@aws-sdk/client-cognito-identity-provider": "^3.984.0",
     "@aws-sdk/client-s3": "^3.984.0",
     "@aws-sdk/client-transcribe": "^3.984.0",
     "@aws-sdk/s3-presigned-post": "^3.984.0",
@@ -37,6 +38,7 @@
     "@react-pdf/renderer": "^4.3.2",
     "@tailwindcss/postcss": "^4.1.18",
     "ai": "^6.0.73",
+    "aws-jwt-verify": "^5.1.1",
     "bcrypt": "^6.0.0",
     "date-fns": "^4.1.0",
     "inngest": "^3.51.0",

@@ -66,7 +66,6 @@ These requirements were delivered in v1.0 and must continue working after migrat
 - ✓ **AUDIO-01**: System can record audio during a session — v1.0
 - ✓ **AUDIO-02**: User can upload audio files for processing — v1.0
 - ✓ **TRANS-01**: System automatically transcribes recorded/uploaded audio into text — v1.0
-- ✓ **TRANS-02**: System can identify and differentiate speakers in the transcription — v1.0
 - ✓ **REVIEW-01**: User can play back session audio synchronized with its transcript — v1.0
 - ✓ **NOTES-01**: User can add basic manual notes to a session — v1.0
 - ✓ **AI-01**: System automatically generates an AI-powered summary of the session — v1.0
@@ -107,13 +106,44 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (To be filled by roadmapper) | | |
+| AUTH-02 | Phase 4 | Pending |
+| AUTH-03 | Phase 4 | Pending |
+| AUTH-04 | Phase 4 | Pending |
+| AUTH-05 | Phase 4 | Pending |
+| AUTH-06 | Phase 4 | Pending |
+| DATA-01 | Phase 5 | Pending |
+| DATA-02 | Phase 5 | Pending |
+| DATA-03 | Phase 5 | Pending |
+| DATA-04 | Phase 5 | Pending |
+| DATA-05 | Phase 5 | Pending |
+| DATA-06 | Phase 5 | Pending |
+| SEARCH-02 | Phase 5 | Pending |
+| SEARCH-03 | Phase 5 | Pending |
+| CODE-01 | Phase 6 | Pending |
+| CODE-02 | Phase 6 | Pending |
+| CODE-03 | Phase 6 | Pending |
+| CODE-04 | Phase 6 | Pending |
+| CODE-05 | Phase 6 | Pending |
+| DEPLOY-01 | Phase 7 | Pending |
+| DEPLOY-02 | Phase 7 | Pending |
+| DEPLOY-03 | Phase 7 | Pending |
+| DEPLOY-04 | Phase 7 | Pending |
+| DEPLOY-05 | Phase 7 | Pending |
+| DEPLOY-06 | Phase 7 | Pending |
+| DEPLOY-07 | Phase 7 | Pending |
+| DEPLOY-08 | Phase 7 | Pending |
+| MIGRATE-01 | Phase 8 | Pending |
+| MIGRATE-02 | Phase 8 | Pending |
+| MIGRATE-03 | Phase 8 | Pending |
+| MIGRATE-04 | Phase 8 | Pending |
+| MIGRATE-05 | Phase 8 | Pending |
+| MIGRATE-06 | Phase 8 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 32 total
-- Mapped to phases: (pending roadmap)
-- Unmapped: (pending roadmap)
+- Mapped to phases: 32/32 (100%)
+- Unmapped: None
 
 ---
 *Requirements defined: 2026-02-06*
-*Last updated: 2026-02-06 after serverless migration scope definition*
+*Last updated: 2026-02-06 after roadmap creation*

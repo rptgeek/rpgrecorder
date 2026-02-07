@@ -9,11 +9,11 @@ Requirements for serverless architecture migration and AWS deployment.
 
 ### Authentication Migration
 
-- [ ] **AUTH-02**: Cognito User Pool created with proper configuration (password policy, MFA optional, token expiry)
-- [ ] **AUTH-03**: Auth.js v5 integrated with Cognito provider for JWT-based authentication
-- [ ] **AUTH-04**: Just-in-time password migration Lambda implemented for zero-downtime user migration
-- [ ] **AUTH-05**: User session handling migrated from database sessions to JWT tokens
-- [ ] **AUTH-06**: User data export and backup completed before migration cutover
+- [x] **AUTH-02**: Cognito User Pool created with proper configuration (password policy, MFA optional, token expiry)
+- [x] **AUTH-03**: Auth.js v5 integrated with Cognito provider for JWT-based authentication
+- [x] **AUTH-04**: Just-in-time password migration Lambda implemented for zero-downtime user migration
+- [x] **AUTH-05**: User session handling migrated from database sessions to JWT tokens
+- [x] **AUTH-06**: User data export and backup completed before migration cutover
 
 ### Database Migration
 
@@ -106,11 +106,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-02 | Phase 4 | Pending |
-| AUTH-03 | Phase 4 | Pending |
-| AUTH-04 | Phase 4 | Pending |
-| AUTH-05 | Phase 4 | Pending |
-| AUTH-06 | Phase 4 | Pending |
+| AUTH-02 | Phase 4 | Complete |
+| AUTH-03 | Phase 4 | Complete |
+| AUTH-04 | Phase 4 | Complete |
+| AUTH-05 | Phase 4 | Complete |
+| AUTH-06 | Phase 4 | Complete |
 | DATA-01 | Phase 5 | Pending |
 | DATA-02 | Phase 5 | Pending |
 | DATA-03 | Phase 5 | Pending |

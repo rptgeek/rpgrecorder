@@ -45,10 +45,10 @@
 **Plans**: 4 plans in 4 waves
 
 Plans:
-- [ ] 04-01-PLAN.md — Cognito infrastructure docs + user data backup
-- [ ] 04-02-PLAN.md — User Migration Lambda for just-in-time migration
-- [ ] 04-03-PLAN.md — Auth.js Cognito provider integration
-- [ ] 04-04-PLAN.md — End-to-end verification checkpoint
+- [x] 04-01-PLAN.md — Cognito infrastructure docs + user data backup
+- [x] 04-02-PLAN.md — User Migration Lambda for just-in-time migration
+- [x] 04-03-PLAN.md — Auth.js Cognito provider integration
+- [x] 04-04-PLAN.md — End-to-end verification checkpoint
 
 #### Phase 5: Database Migration & Validation
 **Goal**: All application data migrated from PostgreSQL to DynamoDB with validated consistency
@@ -62,10 +62,13 @@ Plans:
   5. Nightly validation confirms 100% data parity between PostgreSQL and DynamoDB
   6. Keyword search works on session names and metadata using DynamoDB FilterExpression
   7. Rollback procedure tested and documented for emergency PostgreSQL restoration
-**Plans**: TBD
+**Plans**: 4 plans in 4 waves
 
 Plans:
-- [ ] 05-01: TBD during planning
+- [ ] 05-01-PLAN.md — DynamoDB Schema & Modeling
+- [ ] 05-02-PLAN.md — Dual-Write Implementation
+- [ ] 05-03-PLAN.md — Initial Data Migration
+- [ ] 05-04-PLAN.md — Search & Integrity Validation
 
 #### Phase 6: API Cutover to DynamoDB
 **Goal**: All API endpoints read and write exclusively from DynamoDB (PostgreSQL retired)
@@ -137,11 +140,11 @@ Phases execute in numeric order: 4 → 5 → 6 → 7 → 8
 | 1. Foundation & Authentication | v1.0 | Complete | Complete | 2026-02-05 |
 | 2. Transcription & AI Integration | v1.0 | Complete | Complete | 2026-02-05 |
 | 3. Player Engagement & Insights | v1.0 | Complete | Complete | 2026-02-05 |
-| 4. Authentication Migration | v1.1 | 0/4 | Planned | - |
-| 5. Database Migration & Validation | v1.1 | 0/TBD | Not started | - |
+| 4. Authentication Migration | v1.1 | 4/4 | Complete | 2026-02-06 |
+| 5. Database Migration & Validation | v1.1 | 0/4 | Not started | - |
 | 6. API Cutover to DynamoDB | v1.1 | 0/TBD | Not started | - |
 | 7. Serverless Deployment | v1.1 | 0/TBD | Not started | - |
 | 8. Traffic Migration & Production Cutover | v1.1 | 0/TBD | Not started | - |
 
 ---
-*Last updated: 2026-02-06 after Phase 4 planning*
+*Last updated: 2026-02-06 after Phase 5 planning*

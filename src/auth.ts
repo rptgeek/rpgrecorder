@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import CognitoProvider from "next-auth/providers/cognito";
 import { refreshAccessToken, isTokenExpiring } from "@/lib/cognito/jwt-utils";
+import prisma from "@/lib/prisma";
 
 export const authConfig: NextAuthOptions = {
   providers: [
@@ -18,6 +19,49 @@ export const authConfig: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // Only handle Cognito sign-ins
+      if (account?.provider !== "cognito") {
+        return true;
+      }
+
+      try {
+        // Use Cognito 'sub' as the user ID (stable across the user's lifetime)
+        const cognitoUserId = account.providerAccountId;
+
+        console.log(`[SignIn] Cognito user attempting sign-in:`, {
+          cognitoUserId,
+          email: user.email,
+          name: user.name
+        });
+
+        // Check if user exists in PostgreSQL
+        const existingUser = await prisma.user.findUnique({
+          where: { id: cognitoUserId },
+        });
+
+        if (existingUser) {
+          console.log(`[SignIn] Existing user found:`, existingUser.id);
+        } else {
+          console.log(`[SignIn] Creating new user in PostgreSQL...`);
+          await prisma.user.create({
+            data: {
+              id: cognitoUserId,
+              email: user.email!,
+              name: user.name,
+              // Don't include password field for Cognito users (it's optional)
+            },
+          });
+          console.log(`[SignIn] Successfully created user: ${cognitoUserId}`);
+        }
+
+        return true;
+      } catch (error) {
+        console.error("[SignIn] ERROR - Sign-in failed:", error);
+        console.error("[SignIn] User data:", { id: account?.providerAccountId, email: user.email });
+        return false; // Deny sign-in if we can't create/verify user
+      }
+    },
     async jwt({ token, user, account }) {
       // Initial sign-in: store Cognito tokens
       if (account && user) {

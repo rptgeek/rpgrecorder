@@ -9,12 +9,13 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 
 ## Current Position
 
-Phase: 5 of 8 (Database Migration & Validation)
-Plan: 0 of TBD in current phase
-Status: Not started
-Last activity: 2026-02-06 — Completed Phase 4 (Authentication Migration)
+Phase: 6 of 8 (Production Deployment)
+Plan: 06-01 (Core Infrastructure & Foundation) in progress
+Status: In progress (executing 06-01)
+Last activity: 2026-02-07 — Started execution of 06-01 (Core Infrastructure & Foundation)
 
-Progress: [████░░░░░░] 50% (4/8 phases complete, v1.0 shipped)
+Progress: [█████░░░░░] 62.5% (5/8 phases complete)
+
 
 ## Performance Metrics
 
@@ -45,6 +46,8 @@ Progress: [████░░░░░░] 50% (4/8 phases complete, v1.0 shippe
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
+- New Decision: No data needs to be migrated from PostgreSQL; focus directly on making the application work with the new DynamoDB backend.
+- New Decision: Forgo dual-write validation for PostgreSQL to DynamoDB migration as the project is not yet in production, and proceed with a one-time data migration.
 - v1.1: Migrate from PostgreSQL to DynamoDB for 65-82% cost reduction
 - v1.1: Migrate from Auth.js database sessions to Cognito JWT tokens
 - v1.1: Accept FilterExpression search (vs PostgreSQL FTS) for <50 sessions/campaign
@@ -84,7 +87,7 @@ Last session: 2026-02-06 (plan 04-03 execution)
 Stopped at: Completed 04-03-PLAN.md (Auth.js Cognito Provider Integration)
 Resume file: None
 
-Next step: User must complete Cognito setup, deploy Migration Lambda, add environment variables, and test authentication flow before proceeding to plan 04-04 (Dual-write Validation)
+Next step: Execute plan 06-01 (Core Infrastructure & Foundation)
 
 ---
 *Last updated: 2026-02-06 after 04-03 completion*

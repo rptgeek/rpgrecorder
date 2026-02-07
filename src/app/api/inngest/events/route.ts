@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { inngest } from "@/lib/inngest/client";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/auth";
-import prisma from "@/lib/prisma";
+// import prisma from "@/lib/prisma"; // REMOVED
+import { documentClient } from "@/lib/dynamodb"; // ADDED
+import { GetCommand } from "@aws-sdk/lib-dynamodb"; // ADDED
+
+const TABLE_NAME = process.env.DYNAMODB_TABLE_NAME || "rpg-prod"; // Dynamodb Table Name
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,13 +24,26 @@ export async function POST(req: NextRequest) {
 
     // Verify session ownership if sessionId is provided
     if (data.sessionId) {
-      const sessionRecord = await prisma.session.findUnique({
-        where: { id: data.sessionId, userId: session.user.id },
-      });
+      const { Item: sessionRecord } = await documentClient.send(new GetCommand({
+        TableName: TABLE_NAME,
+        Key: {
+          PK: `USER#${session.user.id}`,
+          SK: `SESSION#${data.sessionId}`,
+        },
+      }));
 
       if (!sessionRecord) {
         return NextResponse.json({ message: "Session not found or unauthorized" }, { status: 403 });
       }
+
+      // **IMPORTANT NOTE:** The Inngest event `session/transcription.completed`
+      // emitted from src/app/api/transcribe-webhook/route.ts currently only passes
+      // `sessionId`. For the `summarizeSessionJob` in Inngest to work correctly
+      // with DynamoDB's single-table design (PK: USER#<userId>), the `userId`
+      // MUST be included in the event data. This will need to be updated in
+      // src/app/api/transcribe-webhook/route.ts as well.
+      // For now, I will modify the `inngest.send` below to pass userId.
+      data.userId = session.user.id; // ADDED userId to event data for Inngest function
     }
 
     await inngest.send({

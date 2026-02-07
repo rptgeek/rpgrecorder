@@ -18,7 +18,8 @@ export async function startTranscriptionJob(
     throw new Error("Missing AWS S3 bucket name, Transcribe output bucket, or IAM role ARN environment variables.");
   }
 
-  const jobName = `rpg-session-${sessionId}-${Date.now()}`;
+  // MODIFIED: Embed userId in the jobName for easier retrieval in the webhook
+  const jobName = `rpg-session-${userId}-${sessionId}-${Date.now()}`;
   const mediaUri = `s3://${s3BucketName}/${audioKey}`; // Use the primary S3 bucket for input
 
   const params = {

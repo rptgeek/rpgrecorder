@@ -1,27 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { updateSession } from "@/lib/actions/session";
+// import { updateSession } from "@/lib/actions/session"; // REMOVED - will perform direct DDB update
 import { s3Client } from "@/lib/aws/s3";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { documentClient } from "@/lib/dynamodb"; // ADDED for direct DDB update
+import { UpdateCommand } from "@aws-sdk/lib-dynamodb"; // ADDED for direct DDB update
 
-// This is a placeholder webhook endpoint.
-// In a real-world scenario, AWS Transcribe does not directly call a webhook.
-// You would typically set up an S3 Event Notification to an SNS topic,
-// then use an AWS Lambda function subscribed to the SNS topic to call this API route,
-// or use AWS EventBridge to trigger a Lambda function to call this API route.
+const TABLE_NAME = process.env.DYNAMODB_TABLE_NAME || "rpg-prod"; // Dynamodb Table Name
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     console.log("Transcribe Webhook received:", JSON.stringify(body, null, 2));
-
-    // AWS Transcribe completion notifications typically come from SNS,
-    // which in turn gets triggered by an S3 event.
-    // The structure of the event can vary. This example assumes a simplified payload
-    // where job details are directly available or can be inferred.
-
-    // A more robust solution would parse a complex SNS notification body.
-    // For now, we'll assume the body directly contains what we need for a completed job.
-    // Example: { "jobName": "rpg-session-sessionId-timestamp", "jobStatus": "COMPLETED", "outputLocation": "s3://bucket/path/to/job.json" }
 
     const { TranscriptionJobName, TranscriptionJobStatus, OutputLocation } = body.detail || body;
 
@@ -34,13 +23,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: `Job ${TranscriptionJobName} status: ${TranscriptionJobStatus}` }, { status: 200 });
     }
 
-    // Extract sessionId from jobName (assuming jobName format: rpg-session-sessionId-timestamp)
-    const sessionIdMatch = TranscriptionJobName.match(/rpg-session-([a-f0-9-]+)-\d+/);
-    if (!sessionIdMatch || !sessionIdMatch[1]) {
-      console.error("Could not extract sessionId from jobName:", TranscriptionJobName);
-      return NextResponse.json({ message: "Could not extract sessionId from jobName" }, { status: 400 });
+    // Extract userId AND sessionId from jobName
+    // Assuming jobName format: rpg-session-<userId>-<sessionId>-<timestamp>
+    const jobNameMatch = TranscriptionJobName.match(/rpg-session-([a-f0-9-]+)-([a-f0-9-]+)-\d+/);
+    if (!jobNameMatch || !jobNameMatch[1] || !jobNameMatch[2]) {
+      console.error("Could not extract userId and sessionId from jobName:", TranscriptionJobName);
+      return NextResponse.json({ message: "Could not extract userId and sessionId from jobName" }, { status: 400 });
     }
-    const sessionId = sessionIdMatch[1];
+    const userId = jobNameMatch[1];
+    const sessionId = jobNameMatch[2];
 
     // Parse OutputLocation to get bucket and key
     const outputUrl = new URL(OutputLocation);
@@ -65,17 +56,26 @@ export async function POST(req: NextRequest) {
       ?.map((t: any) => t.transcript)
       .join(" ") || "";
 
-    // Update session with transcriptJson and flattened text
-    await updateSession(sessionId, { 
-      transcriptJson: transcriptionResult,
-      transcriptText: transcriptText
-    });
+    // PERFORM DIRECT DYNAMODB UPDATE HERE
+    await documentClient.send(new UpdateCommand({
+      TableName: TABLE_NAME,
+      Key: {
+        PK: `USER#${userId}`,
+        SK: `SESSION#${sessionId}`,
+      },
+      UpdateExpression: "SET transcriptJson = :transcriptJson, transcriptText = :transcriptText, updatedAt = :updatedAt",
+      ExpressionAttributeValues: {
+        ":transcriptJson": transcriptionResult,
+        ":transcriptText": transcriptText,
+        ":updatedAt": new Date().toISOString(),
+      },
+    }));
 
     // Trigger AI summarization via Inngest (Plan 02-03)
     const { inngest } = await import("@/lib/inngest/client");
     await inngest.send({
       name: "session/transcription.completed",
-      data: { sessionId },
+      data: { sessionId, userId }, // NOW INCLUDING userId
     });
 
     return NextResponse.json({ message: `Successfully processed transcription for session ${sessionId}` }, { status: 200 });

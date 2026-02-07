@@ -2,7 +2,12 @@ import NextAuth from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import CognitoProvider from "next-auth/providers/cognito";
 import { refreshAccessToken, isTokenExpiring } from "@/lib/cognito/jwt-utils";
-import prisma from "@/lib/prisma";
+// import prisma from "@/lib/prisma"; // REMOVED
+import { documentClient } from "@/lib/dynamodb"; // ADDED
+import { PutCommand, GetCommand } from "@aws-sdk/lib-dynamodb"; // ADDED GetCommand for potential future use or explicit existence check
+import { AttributeValue } from "@aws-sdk/client-dynamodb"; // Needed for GSI queries if implemented for email lookup
+
+const TABLE_NAME = process.env.DYNAMODB_TABLE_NAME || "rpg-prod"; // Dynamodb Table Name
 
 export const authConfig: NextAuthOptions = {
   providers: [
@@ -35,25 +40,31 @@ export const authConfig: NextAuthOptions = {
           name: user.name
         });
 
-        // Check if user exists in PostgreSQL
-        const existingUser = await prisma.user.findUnique({
-          where: { id: cognitoUserId },
-        });
+        // Use PutCommand for upserting the user in DynamoDB
+        // PK: USER#<cognito_sub>, SK: METADATA#<cognito_sub>
+        // GSI1PK: EMAIL#<user_email>, GSI1SK: METADATA#<user_email>
+        const userItem = {
+          PK: `USER#${cognitoUserId}`,
+          SK: `METADATA#${cognitoUserId}`,
+          EntityType: 'User',
+          id: cognitoUserId, // Store sub as id
+          email: user.email!,
+          name: user.name || null,
+          createdAt: new Date().toISOString(), // This will be updated on every sign-in if no ConditionExpression
+          updatedAt: new Date().toISOString(),
+          GSI1PK: `EMAIL#${user.email!}`, // For email lookup
+          GSI1SK: `METADATA#${user.email!}`,
+        };
 
-        if (existingUser) {
-          console.log(`[SignIn] Existing user found:`, existingUser.id);
-        } else {
-          console.log(`[SignIn] Creating new user in PostgreSQL...`);
-          await prisma.user.create({
-            data: {
-              id: cognitoUserId,
-              email: user.email!,
-              name: user.name,
-              // Don't include password field for Cognito users (it's optional)
-            },
-          });
-          console.log(`[SignIn] Successfully created user: ${cognitoUserId}`);
-        }
+        // If you want to only set createdAt on first creation, you'd need a conditional put:
+        // ConditionExpression: "attribute_not_exists(PK)" for first creation
+        // For now, simpler PutCommand acts as upsert
+        await documentClient.send(new PutCommand({
+          TableName: TABLE_NAME,
+          Item: userItem,
+        }));
+        
+        console.log(`[SignIn] User upserted in DynamoDB: ${cognitoUserId}`);
 
         return true;
       } catch (error) {
